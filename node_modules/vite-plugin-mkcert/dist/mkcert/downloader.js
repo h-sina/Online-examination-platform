@@ -1,0 +1,35 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const logger_1 = require("../lib/logger");
+const request_1 = __importDefault(require("../lib/request"));
+const util_1 = require("../lib/util");
+class Downloader {
+    static create() {
+        return new Downloader();
+    }
+    constructor() { }
+    download(downloadUrl, savedPath) {
+        return __awaiter(this, void 0, void 0, function* () {
+            (0, logger_1.debug)('Downloading the mkcert executable from %s', downloadUrl);
+            const { data } = yield request_1.default.get(downloadUrl, {
+                responseType: 'arraybuffer'
+            });
+            yield (0, util_1.writeFile)(savedPath, data);
+            (0, logger_1.debug)('The mkcert has been saved to %s', savedPath);
+        });
+    }
+}
+exports.default = Downloader;
+//# sourceMappingURL=downloader.js.map

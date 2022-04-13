@@ -1,0 +1,19 @@
+{
+	"name": "@volar/code-gen",
+	"version": "0.33.9",
+	"main": "out/index.js",
+	"license": "MIT",
+	"files": [
+		"out/**/*.js",
+		"out/**/*.d.ts"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/johnsoncodehk/volar.git",
+		"directory": "packages/code-gen"
+	},
+	"dependencies": {
+		"@volar/source-map": "0.33.9"
+	},
+	"gitHead": "9031e662fe238df7ec385ddde6a91e1e363a4af4"
+}

@@ -1,0 +1,61 @@
+{
+  "name": "@purge-icons/core",
+  "version": "0.8.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.js"
+  },
+  "license": "MIT",
+  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/antfu/purge-icons"
+  },
+  "homepage": "https://github.com/antfu/purge-icons",
+  "bugs": "https://github.com/antfu/purge-icons/issues",
+  "scripts": {
+    "prebuild": "esno scripts/prepare.ts",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "test": "ava"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@iconify/iconify": "2.1.2",
+    "axios": "^0.26.0",
+    "debug": "^4.3.3",
+    "fast-glob": "^3.2.11",
+    "fs-extra": "^10.0.1"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.1.7",
+    "@iconify/types": "^1.0.12",
+    "@types/debug": "^4.1.7",
+    "@types/fs-extra": "^9.0.13",
+    "@types/yargs": "^17.0.8",
+    "ava": "^4.0.1",
+    "cross-env": "^7.0.3",
+    "esbuild-register": "^3.3.2",
+    "esm": "^3.2.25",
+    "esno": "^0.14.1",
+    "tsup": "^5.11.13",
+    "typescript": "^4.5.5"
+  },
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "esm",
+      "esbuild-register"
+    ]
+  },
+  "gitHead": "7577b0d282944efcafb8aad45f36e93a54657db0"
+}

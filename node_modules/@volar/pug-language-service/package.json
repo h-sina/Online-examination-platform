@@ -1,0 +1,29 @@
+{
+	"name": "@volar/pug-language-service",
+	"version": "0.33.9",
+	"main": "out/index.js",
+	"license": "MIT",
+	"files": [
+		"out/**/*.js",
+		"out/**/*.d.ts"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/johnsoncodehk/volar.git",
+		"directory": "packages/pug-language-service"
+	},
+	"devDependencies": {
+		"vscode-html-languageservice": "^4.2.1"
+	},
+	"dependencies": {
+		"@volar/code-gen": "0.33.9",
+		"@volar/shared": "0.33.9",
+		"@volar/source-map": "0.33.9",
+		"@volar/transforms": "0.33.9",
+		"pug-lexer": "^5.0.1",
+		"pug-parser": "^6.0.0",
+		"vscode-languageserver-textdocument": "^1.0.3",
+		"vscode-languageserver-types": "^3.17.0-next.6"
+	},
+	"gitHead": "9031e662fe238df7ec385ddde6a91e1e363a4af4"
+}

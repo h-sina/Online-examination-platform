@@ -1,0 +1,27 @@
+{
+	"name": "@volar/shared",
+	"version": "0.33.9",
+	"main": "out/node.js",
+	"browser": "./out/browser.js",
+	"license": "MIT",
+	"files": [
+		"out/**/*.js",
+		"out/**/*.d.ts"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/johnsoncodehk/volar.git",
+		"directory": "packages/shared"
+	},
+	"dependencies": {
+		"upath": "^2.0.1",
+		"vscode-jsonrpc": "^8.0.0-next.5",
+		"vscode-uri": "^3.0.3"
+	},
+	"devDependencies": {
+		"typescript": "latest",
+		"vscode-languageserver-protocol": "^3.17.0-next.12",
+		"vscode-languageserver-textdocument": "^1.0.3"
+	},
+	"gitHead": "9031e662fe238df7ec385ddde6a91e1e363a4af4"
+}

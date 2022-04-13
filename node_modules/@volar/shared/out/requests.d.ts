@@ -1,0 +1,96 @@
+import * as rpc from 'vscode-jsonrpc';
+import type * as vscode from 'vscode-languageserver-protocol';
+/**
+ * Client Requests
+ */
+export declare namespace GetDocumentContentRequest {
+    type ParamsType = vscode.TextDocumentIdentifier;
+    type ResponseType = string;
+    type ErrorType = never;
+    const type: rpc.RequestType<vscode.TextDocumentIdentifier, string, never>;
+}
+export declare namespace GetDocumentVersionRequest {
+    type ParamsType = vscode.TextDocumentIdentifier;
+    type ResponseType = number | null | undefined;
+    type ErrorType = never;
+    const type: rpc.RequestType<vscode.TextDocumentIdentifier, ResponseType, never>;
+}
+export declare namespace ShowReferencesNotification {
+    type ParamsType = vscode.TextDocumentPositionParams & {
+        references: vscode.Location[];
+    };
+    const type: rpc.NotificationType<ParamsType>;
+}
+export declare namespace GetDocumentNameCasesRequest {
+    type ParamsType = vscode.TextDocumentIdentifier;
+    type ResponseType = {
+        tagNameCase: 'both' | 'kebabCase' | 'pascalCase';
+        attrNameCase: 'kebabCase' | 'camelCase';
+    };
+    type ErrorType = never;
+    const type: rpc.RequestType<vscode.TextDocumentIdentifier, ResponseType, never>;
+}
+export declare namespace GetDocumentPrintWidthRequest {
+    type ParamsType = vscode.TextDocumentIdentifier;
+    type ResponseType = number | undefined;
+    type ErrorType = never;
+    const type: rpc.RequestType<vscode.TextDocumentIdentifier, ResponseType, never>;
+}
+export declare namespace GetEditorSelectionRequest {
+    type ResponseType = vscode.TextDocumentPositionParams | undefined;
+    type ErrorType = never;
+    const type: rpc.RequestType0<ResponseType, never>;
+}
+/**
+ * Server Requests
+ */
+export declare namespace InitDoneRequest {
+    type ResponseType = null | undefined;
+    type ErrorType = never;
+    const type: rpc.RequestType0<ResponseType, never>;
+}
+export declare namespace GetMatchTsConfigRequest {
+    type ParamsType = vscode.TextDocumentIdentifier;
+    type ResponseType = string | null | undefined;
+    type ErrorType = never;
+    const type: rpc.RequestType<vscode.TextDocumentIdentifier, ResponseType, never>;
+}
+export declare namespace D3Request {
+    type ParamsType = vscode.TextDocumentIdentifier;
+    type ResponseType = string | null | undefined;
+    type ErrorType = never;
+    const type: rpc.RequestType<vscode.TextDocumentIdentifier, ResponseType, never>;
+}
+export declare namespace AutoInsertRequest {
+    type ParamsType = vscode.TextDocumentPositionParams & {
+        options: {
+            lastChange: {
+                range: vscode.Range;
+                rangeOffset: number;
+                rangeLength: number;
+                text: string;
+            };
+        };
+    };
+    type ResponseType = string | vscode.TextEdit | null | undefined;
+    type ErrorType = never;
+    const type: rpc.RequestType<ParamsType, ResponseType, never>;
+}
+export declare namespace VerifyAllScriptsNotification {
+    const type: rpc.NotificationType0;
+}
+export declare namespace WriteVirtualFilesNotification {
+    type ParamsType = {
+        lsType: 'template' | 'script';
+    };
+    const type: rpc.NotificationType<ParamsType>;
+}
+export declare namespace DetectDocumentNameCasesRequest {
+    type ParamsType = vscode.TextDocumentIdentifier;
+    type ResponseType = {
+        tag: 'both' | 'kebabCase' | 'pascalCase' | 'unsure';
+        attr: 'both' | 'kebabCase' | 'camelCase' | 'unsure';
+    } | null | undefined;
+    type ErrorType = never;
+    const type: rpc.RequestType<vscode.TextDocumentIdentifier, ResponseType, never>;
+}

@@ -1,0 +1,32 @@
+{
+    "name": "@types/imagemin-webp",
+    "version": "7.0.0",
+    "description": "TypeScript definitions for imagemin-webp",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/imagemin-webp",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Brett M",
+            "url": "https://github.com/brettm12345",
+            "githubUsername": "brettm12345"
+        },
+        {
+            "name": "Piotr Błażejewicz",
+            "url": "https://github.com/peterblazejewicz",
+            "githubUsername": "peterblazejewicz"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/imagemin-webp"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/imagemin": "*"
+    },
+    "typesPublisherContentHash": "93be5239ad056ca2ace413377597a07d1b62da8fcceb97dccb42ca6f00203b58",
+    "typeScriptVersion": "3.8"
+}

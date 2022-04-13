@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["dep:@ant-design_colors"],
+  "sourcesContent": ["\nexport * from \"./node_modules/@ant-design/colors/dist/index.esm.js\""],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AAAA;",
+  "names": []
+}

@@ -1,0 +1,20 @@
+{
+	"name": "@volar/transforms",
+	"version": "0.33.9",
+	"main": "out/index.js",
+	"license": "MIT",
+	"files": [
+		"out/**/*.js",
+		"out/**/*.d.ts"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/johnsoncodehk/volar.git",
+		"directory": "packages/transforms"
+	},
+	"dependencies": {
+		"@volar/shared": "0.33.9",
+		"vscode-languageserver-types": "^3.17.0-next.6"
+	},
+	"gitHead": "9031e662fe238df7ec385ddde6a91e1e363a4af4"
+}

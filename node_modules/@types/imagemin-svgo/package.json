@@ -1,0 +1,33 @@
+{
+    "name": "@types/imagemin-svgo",
+    "version": "10.0.1",
+    "description": "TypeScript definitions for imagemin-svgo",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/imagemin-svgo",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Romain Faust",
+            "url": "https://github.com/romain-faust",
+            "githubUsername": "romain-faust"
+        },
+        {
+            "name": "Piotr Błażejewicz",
+            "url": "https://github.com/peterblazejewicz",
+            "githubUsername": "peterblazejewicz"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/imagemin-svgo"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/imagemin": "*",
+        "@types/svgo": "*"
+    },
+    "typesPublisherContentHash": "b5df4a1d9a9240415153b283b6484edeb0e8717827f46f28c599dd72ee224517",
+    "typeScriptVersion": "3.8"
+}

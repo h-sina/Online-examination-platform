@@ -1,0 +1,16 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = __importDefault(require("axios"));
+const logger_1 = require("./logger");
+const request = axios_1.default.create();
+request.interceptors.response.use(res => {
+    return res;
+}, error => {
+    (0, logger_1.debug)('Request error: %o', error);
+    return Promise.reject(error);
+});
+exports.default = request;
+//# sourceMappingURL=request.js.map

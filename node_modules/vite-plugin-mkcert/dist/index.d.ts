@@ -1,0 +1,12 @@
+import { Plugin } from 'vite';
+import { MkcertOptions } from './mkcert';
+export declare type ViteCertificateOptions = MkcertOptions & {
+    /**
+     * The hosts that needs to generate the certificate.
+     *
+     * @default ["localhost","local ip addrs"]
+     */
+    hosts?: string[];
+};
+declare const plugin: (options?: ViteCertificateOptions) => Plugin;
+export default plugin;

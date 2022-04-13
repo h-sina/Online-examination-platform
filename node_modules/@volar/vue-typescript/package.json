@@ -1,0 +1,30 @@
+{
+	"name": "@volar/vue-typescript",
+	"version": "0.33.9",
+	"main": "out/index.js",
+	"license": "MIT",
+	"files": [
+		"out/**/*.js",
+		"out/**/*.d.ts"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/johnsoncodehk/volar.git",
+		"directory": "packages/vue-typescript"
+	},
+	"devDependencies": {
+		"typescript": "latest"
+	},
+	"dependencies": {
+		"@volar/code-gen": "0.33.9",
+		"@volar/pug-language-service": "0.33.9",
+		"@volar/source-map": "0.33.9",
+		"@volar/vue-code-gen": "0.33.9",
+		"@vue/compiler-sfc": "^3.2.27",
+		"@vue/reactivity": "^3.2.27"
+	},
+	"browser": {
+		"./out/plugins/pug.js": "./out/plugins/empty.js"
+	},
+	"gitHead": "9031e662fe238df7ec385ddde6a91e1e363a4af4"
+}
