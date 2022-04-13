@@ -28,7 +28,8 @@ export function useTitle() {
       }
 
       const tTitle = t(route?.meta?.title as string);
-      pageTitle.value = tTitle ? ` ${tTitle} - ${title} ` : `${title}`;
+      // pageTitle.value = tTitle ? ` ${tTitle} - ${title} ` : `${title}`;
+      pageTitle.value = tTitle ? `学习有我 - ${tTitle}` : '学习有我';
     },
     { immediate: true },
   );
