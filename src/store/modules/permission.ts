@@ -7,10 +7,19 @@ import { PageEnum } from '/@/enums/pageEnum';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { transformRouteToMenu } from '/@/router/helper/menuHelper';
-import { flatMultiLevelRoutes, transformObjToRoute } from '/@/router/helper/routeHelper';
+import {
+  flatMultiLevelRoutes,
+  transformObjToRoute,
+} from '/@/router/helper/routeHelper';
 import { asyncRoutes } from '/@/router/routes';
-import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-import type { AppRouteRecordRaw, Menu } from '/@/router/types';
+import {
+  ERROR_LOG_ROUTE,
+  PAGE_NOT_FOUND_ROUTE,
+} from '/@/router/routes/basic';
+import type {
+  AppRouteRecordRaw,
+  Menu,
+} from '/@/router/types';
 import projectSetting from '/@/settings/projectSetting';
 import { store } from '/@/store';
 import { filter } from '/@/utils/helper/treeHelper';
@@ -165,10 +174,10 @@ export const usePermissionStore = defineStore({
             menuList.splice(2, 10);
           } else if (roleList == 'teacher') {
             menuList.splice(1, 1);
-            menuList.splice(2, 7);
+            menuList.splice(2, 9);
           } else if (roleList == 'sa') {
             menuList.splice(1, 1);
-            menuList.splice(3, 7);
+            menuList.splice(3, 8);
           } else {
             menuList.splice(1, 1);
             menuList.splice(4, 7);

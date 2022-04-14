@@ -2,9 +2,20 @@ import { h } from 'vue';
 
 import type { ErrorMessageMode } from '/#/axios';
 import type { UserInfo } from '/#/store';
-import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
-import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
+import {
+  GetUserInfoModel,
+  LoginParams,
+} from '/@/api/sys/model/userModel';
+import {
+  doLogout,
+  getUserInfo,
+  loginApi,
+} from '/@/api/sys/user';
+import {
+  ROLES_KEY,
+  TOKEN_KEY,
+  USER_INFO_KEY,
+} from '/@/enums/cacheEnum';
 import { PageEnum } from '/@/enums/pageEnum';
 import { RoleEnum } from '/@/enums/roleEnum';
 import { useI18n } from '/@/hooks/web/useI18n';
@@ -13,7 +24,10 @@ import { router } from '/@/router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { store } from '/@/store';
 import { usePermissionStore } from '/@/store/modules/permission';
-import { getAuthCache, setAuthCache } from '/@/utils/auth';
+import {
+  getAuthCache,
+  setAuthCache,
+} from '/@/utils/auth';
 import { isArray } from '/@/utils/is';
 import { defineStore } from 'pinia';
 import { RouteRecordRaw } from 'vue-router';
@@ -96,7 +110,39 @@ export const useUserStore = defineStore({
 
         // save token
         // this.setToken(token);
-        this.setToken(data.data);
+        console.log(data);
+        this.setToken(data.data.token);
+        const { roles = [] } = {};
+        console.log(data.data.userType);
+        if (data.data.userType == 1) {
+          roles[0] = {
+            roleName: 'Student',
+            value: 'student',
+          };
+        } else if (data.data.userType == 2) {
+          roles[0] = {
+            roleName: 'Te',
+            value: 'teacher',
+          };
+        } else if (data.data.userType == 3) {
+          roles[0] = {
+            roleName: 'Sa',
+            value: 'sa',
+          };
+        } else if (data.data.userType == 4) {
+          roles[0] = {
+            roleName: 'Ad',
+            value: 'ad',
+          };
+        }
+
+        if (isArray(roles)) {
+          const roleList = roles.map((item) => item.value) as RoleEnum[];
+          this.setRoleList(roleList);
+        } else {
+          userInfo.roles = [];
+          this.setRoleList([]);
+        }
         return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
@@ -135,38 +181,39 @@ export const useUserStore = defineStore({
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
       const userInfo = await getUserInfo();
-      console.log(userInfo);
-      const { roles = [] } = userInfo;
-      if (userInfo.data.id == 10001) {
-        roles[0] = {
-          roleName: 'Tester',
-          value: 'test',
-        };
-        console.log(10001);
-      } else if (userInfo.data.id == 2) {
-        roles[0] = {
-          roleName: 'Te',
-          value: 'teacher',
-        };
-      } else if (userInfo.data.id == 3) {
-        roles[0] = {
-          roleName: 'Sa',
-          value: 'sa',
-        };
-      } else if (userInfo.data.id == 4) {
-        roles[0] = {
-          roleName: 'Ad',
-          value: 'ad',
-        };
-      }
+      // console.log(userInfo);
 
-      if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[];
-        this.setRoleList(roleList);
-      } else {
-        userInfo.roles = [];
-        this.setRoleList([]);
-      }
+      // const { roles = [] } = userInfo;
+      // if (userInfo.data.userType == 1) {
+      //   roles[0] = {
+      //     roleName: 'Student',
+      //     value: 'student',
+      //   };
+      //   console.log(10001);
+      // } else if (userInfo.data.userType == 2) {
+      //   roles[0] = {
+      //     roleName: 'Te',
+      //     value: 'teacher',
+      //   };
+      // } else if (userInfo.data.userType == 3) {
+      //   roles[0] = {
+      //     roleName: 'Sa',
+      //     value: 'sa',
+      //   };
+      // } else if (userInfo.data.userType == 4) {
+      //   roles[0] = {
+      //     roleName: 'Ad',
+      //     value: 'ad',
+      //   };
+      // }
+
+      // if (isArray(roles)) {
+      //   const roleList = roles.map((item) => item.value) as RoleEnum[];
+      //   this.setRoleList(roleList);
+      // } else {
+      //   userInfo.roles = [];
+      //   this.setRoleList([]);
+      // }
       this.setUserInfo(userInfo.data);
 
       return userInfo.data;
