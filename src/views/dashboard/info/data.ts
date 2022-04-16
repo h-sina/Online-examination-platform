@@ -59,11 +59,33 @@ export const baseSetschemas: FormSchema[] = [
     label: '姓名',
     colProps: { span: 18 },
   },
+  // {
+  //   field: 'userSex',
+  //   component: 'Input',
+  //   label: '性别',
+  //   colProps: { span: 18 },
+  // },
   {
     field: 'userSex',
-    component: 'Input',
+    component: 'RadioGroup',
     label: '性别',
-    colProps: { span: 18 },
+    defaultValue: 'userSex',
+    colProps: {
+      span: 18,
+    },
+    componentProps: {
+      options: [
+        {
+          label: '女',
+          value: 0,
+        },
+        {
+          label: '男',
+          value: 1,
+        },
+      ],
+    },
+    required: true,
   },
   {
     field: 'userPhone',

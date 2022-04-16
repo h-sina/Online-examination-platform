@@ -17,6 +17,16 @@ enum Api {
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
   UpdateUserInfo = '/user/student/',
+  GetMessage = '/user/notice',
+}
+
+/**
+ * @description: user message api
+ */
+export function getNotice() {
+  return defHttp.get({
+    url: Api.GetMessage,
+  });
 }
 
 /**

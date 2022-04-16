@@ -66,13 +66,14 @@ export default defineComponent({
     });
 
     const avatar = computed(() => {
-      const { avatar } = userStore.getUserInfo;
-      return avatar || headerImg;
+      const { userProfilePhoto } = userStore.getUserInfo;
+      // return avatar.value || headerImg;
+      return userProfilePhoto || headerImg;
     });
 
     function updateAvatar(src: string) {
       const userinfo = userStore.getUserInfo;
-      userinfo.avatar = src;
+      userinfo.userProfilePhoto = src;
       userStore.setUserInfo(userinfo);
     }
 
