@@ -1,5 +1,5 @@
 <template>
-  <div>exam</div>
+  <div>考试</div>
 </template>
 
 <script setup lang="ts"></script>

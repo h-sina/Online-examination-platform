@@ -179,8 +179,8 @@ export const usePermissionStore = defineStore({
             menuList.splice(1, 1);
             menuList.splice(3, 8);
           } else {
-            menuList.splice(1, 1);
-            menuList.splice(4, 7);
+            // menuList.splice(1, 1);
+            menuList.splice(4, 8);
           }
           this.setFrontMenuList(menuList);
           // Convert multi-level routing to level 2 routing

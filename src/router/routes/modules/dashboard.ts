@@ -61,7 +61,38 @@ const dashboard: AppRouteModule = {
       meta: {
         title: '题库训练',
       },
+      // children: [
+      //   {
+      //     path: 'quesDetail/:id',
+      //     name: 'questionsDetail',
+      //     component: import('/@/views/dashboard/quesbank/questionsDetail/index.vue'),
+      //     meta: {
+      //       carryParam: true,
+      //       hidePathForChildren: true, // 本级path将会在子级菜单中合成完整path时会忽略这一层级
+      //       ignoreRoute: true, // 本路由仅用于菜单生成，不会在实际的路由表中出现
+      //     },
+      //     // children: [
+      //     //   path: 'quesDetail/id1', // 其上级有标记hidePathForChildren，所以本级在生成菜单时最终的path为  /level/tabs/id1
+      //     //   name: 'questionsDetail',
+      //     //   component: import('/@/views/dashboard/quesbank/questionsDetail/index.vue'),
+      //     //   meta: {
+      //     //     carryParam: true,
+      //     //     ignoreRoute: true,  // 本路由仅用于菜单生成，不会在实际的路由表中出现
+      //     //   },
+      //     // ]
+      //   },
+      // ],
     },
+    // {
+    //   path: 'quesDetail/:id',
+    //   name: 'quesDatail',
+    //   component: import('/@/views/dashboard/quesbank/questionsDetail/index.vue'),
+    //   meta: {
+    //     carryParam: true,
+    //     // hideMenu: true,
+    //     title: '题目详情',
+    //   },
+    // },
     {
       path: 'collect',
       name: 'Collect',
