@@ -4,14 +4,31 @@
       健康的身体是实现目标的基石。
       <div :class="`${prefixCls}__link`"></div>
     </template>
-    <div class="p-4">
-      <BasicTable
-        @register="registerTable"
-        :dataSource="data.colList"
-        @change="pageChange"
-        @row-click="createActions"
-      />
+    <div class="p-4" v-if="!data.detail">
+      <BasicTable @register="registerTable" :dataSource="data.colList" @change="pageChange">
+        <template #action="{ record, column }">
+          <TableAction :actions="createActions(record, column)" />
+        </template>
+      </BasicTable>
     </div>
+
+    <CollapseContainer :title="'题目ID：' + `${data.quesDetail.id}`" v-if="data.detail">
+      <div class="m-15" style="font-size: 20px">{{ data.quesDetail.content }}</div>
+      <BasicForm
+        v-if="data.detail"
+        @register="register1"
+        @submit="handleSubmit"
+        @reset="handleReset"
+        :schemas="data.schemas"
+      />
+      <a-button @click="exit" class="m-5">退出训练</a-button>
+      <a-button @click="lookAnswer" class="m-5">查看答案</a-button>
+    </CollapseContainer>
+    <CollapseContainer title="题目答案" v-if="data.answerIf" :canExpan="false">
+      <h1 v-if="data.quesDetail.answer">答案：{{ data.quesDetail.answer }}</h1>
+      <h1 v-if="data.quesDetail.rightAnswer">答案：{{ data.quesDetail.rightAnswer }}</h1>
+      <h1 v-if="data.quesDetail.analysis">答案解析：{{ data.quesDetail.analysis }}</h1>
+    </CollapseContainer>
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -21,15 +38,16 @@ import { cardList } from './data';
 import { PageWrapper } from '/@/components/Page';
 import { Card, Row, Col, List } from 'ant-design-vue';
 import { getCollection, delCollection, addCollection } from '/@/api/info/info';
-import { useTable } from '/@/components/Table';
+import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
+import { useTable, TableAction } from '/@/components/Table';
 import { getBasicColumns, getBasicData } from './tableData';
 import { BasicTable } from '/@/components/Table';
 import { useMessage } from '/@/hooks/web/useMessage';
 
-import { treeOptionsListApi } from '/@/api/demo/tree';
-import { optionsListApi } from '/@/api/demo/select';
-
 import { useUserStore } from '/@/store/modules/user';
+import { getQuestionDetail } from '/@/api/question/question';
+import { pd, dx, duox } from '../quesbank/choose';
+import { CollapseContainer } from '/@/components/Container/index';
 
 const { notification } = useMessage();
 
@@ -54,8 +72,19 @@ export default defineComponent({
     [Row.name]: Row,
     [Col.name]: Col,
     BasicTable,
+    TableAction,
+    BasicForm,
+    CollapseContainer,
   },
   setup() {
+    // 选项注册
+    const [register1, { setFieldsValue, getFieldsValue, submit }] = useForm({
+      labelWidth: 120,
+      submitButtonOptions: {
+        text: '提交',
+      },
+    });
+
     // 分页变量
     const pagination = ref<any>(true);
 
@@ -77,13 +106,19 @@ export default defineComponent({
         clearSelectedRowKeys,
       },
     ] = useTable({
-      title: '点击要删除的行 注意不能撤销 没有确认框 请谨慎删除！',
+      title: '点击删除按钮 注意不能撤销 没有确认框 请谨慎删除！',
       titleHelpMessage: '温馨提醒',
       columns: getBasicColumns(),
       showTableSetting: true,
       pagination: pagination,
       showTableSetting: true,
       tableSetting: { fullScreen: true },
+      actionColumn: {
+        width: 160,
+        title: 'Action',
+        dataIndex: 'action',
+        slots: { customRender: 'action' },
+      },
     });
 
     const data = reactive({
@@ -92,6 +127,11 @@ export default defineComponent({
         pageNum: 1,
         pageSize: 10,
       },
+      quesDetail: {},
+      detail: false,
+      schemas: [],
+      detailId: 0,
+      answerIf: false,
     });
 
     async function getCollections() {
@@ -150,10 +190,11 @@ export default defineComponent({
       getCollections();
       console.log(getPaginationRef());
     }
-
-    async function createActions(values) {
+    // 点击删除按钮
+    async function del(quesId) {
       console.log(userinfo.value);
-      const res = await delCollection({ questionId: values.id, userId: userinfo.value.id });
+      console.log(quesId);
+      const res = await delCollection({ questionId: quesId, userId: userinfo.value.id });
       if (res.code === 'ITEST-200') {
         notification.success({
           message: '删除成功',
@@ -168,9 +209,169 @@ export default defineComponent({
       getCollections();
     }
 
+    // 点击查看按钮
+    // 点击某行试题触发获取试题详情
+    async function questionDetail(record: EditRecordRow) {
+      data.detailId = record.id;
+      let type = typeToId(record.type);
+      switch (type) {
+        case 1:
+          data.schemas = pd();
+          break;
+        case 2:
+          data.schemas = dx();
+          break;
+        case 3:
+          data.schemas = duox();
+          break;
+      }
+      await QuestionDetail(record.id, type);
+    }
+
+    // 类型转ID
+    const typeToId = (type) => {
+      switch (type) {
+        case '判断题':
+          return 1;
+        case '单选题':
+          return 2;
+        case '多选题':
+          return 3;
+        case '填空题':
+          return 4;
+        case '论述题':
+          return 5;
+      }
+    };
+
+    // 根据ID TYPE请求题目详情
+    async function QuestionDetail(id, type) {
+      const res = await getQuestionDetail(id, type);
+      data.quesDetail = res.data;
+      console.log(res);
+      console.log('发起请求拿试题详情');
+      data.detail = true;
+    }
+
     onMounted(() => {
       getCollections();
     });
+
+    function createActions(record: EditRecordRow, column: BasicColumn): ActionItem[] {
+      return [
+        {
+          label: '查看',
+          color: 'success',
+          onClick: questionDetail.bind(null, record),
+        },
+        {
+          label: '删除',
+          color: 'error',
+          onClick: del.bind(null, record.id),
+        },
+      ];
+    }
+
+    // 点击退出按钮
+    const exit = () => {
+      data.detail = false;
+      closeAnswer();
+    };
+
+    // 提交选项
+    const handleSubmit = () => {
+      console.log(getFieldsValue().answer1);
+      if (getFieldsValue().answer1 == undefined) {
+        notification.error({
+          message: '请输入答案',
+          duration: 3,
+        });
+        return;
+      }
+      if (data.quesDetail.type === 1) {
+        if (data.quesDetail.answer == getFieldsValue().answer1) {
+          setFieldsValue({ answer1: null });
+          closeAnswer();
+          notification.success({
+            message: '答案正确 系统将自动跳转到下一题...',
+            duration: 3,
+          });
+          // del(data.detailId);
+          nextQues();
+        } else {
+          setFieldsValue({ answer1: null });
+          notification.error({
+            message: '答案错误',
+            duration: 3,
+          });
+        }
+      } else if (data.quesDetail.type === 2) {
+        console.log(data.quesDetail.rightAnswer);
+        console.log(getFieldsValue());
+        if (data.quesDetail.rightAnswer == getFieldsValue().answer1) {
+          setFieldsValue({ answer1: null });
+          closeAnswer();
+          notification.success({
+            message: '答案正确 系统将自动跳转到下一题...',
+            duration: 3,
+          });
+          nextQues();
+        } else {
+          setFieldsValue({ answer1: null });
+          notification.error({
+            message: '答案错误',
+            duration: 3,
+          });
+        }
+      } else if (data.quesDetail.type === 3) {
+        console.log(data.quesDetail.rightAnswer);
+        console.log(getFieldsValue().answer1.join(''));
+        if (data.quesDetail.rightAnswer == getFieldsValue().answer1.join('')) {
+          setFieldsValue({ answer1: null });
+          closeAnswer();
+          notification.success({
+            message: '答案正确 系统将自动跳转到下一题...',
+            duration: 3,
+          });
+          nextQues();
+        } else {
+          setFieldsValue({ answer1: null });
+          notification.error({
+            message: '答案错误',
+            duration: 3,
+          });
+        }
+      }
+    };
+
+    // 下一题
+    const nextQues = () => {
+      try {
+        data.colList.some((item, index, list) => {
+          if (item.id == data.detailId) {
+            if (index + 1 >= list.length) {
+              notification.warning({
+                message: '这已经是最后一题了',
+                duration: 3,
+              });
+              throw '循环终止';
+            } else {
+              data.detailId = list[index + 1].id;
+              QuestionDetail(data.detailId, typeToId(list[index + 1].type));
+              throw '循环终止';
+            }
+          }
+        });
+      } catch (e) {}
+    };
+
+    const lookAnswer = () => {
+      data.answerIf = true;
+    };
+
+    const closeAnswer = () => {
+      data.answerIf = false;
+    };
 
     return {
       prefixCls: 'list-card',
@@ -182,6 +383,13 @@ export default defineComponent({
       columns: getBasicColumns(),
       pageChange,
       createActions,
+      questionDetail,
+      exit,
+      handleSubmit,
+      register1,
+      nextQues,
+      lookAnswer,
+      closeAnswer,
     };
   },
 });

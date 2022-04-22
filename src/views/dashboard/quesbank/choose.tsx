@@ -112,7 +112,7 @@ export function pd(): FormSchema[] {
       component: 'RadioGroup',
       label: '判断',
       colProps: {
-        span: 18,
+        span: 8,
       },
       componentProps: {
         options: [
@@ -132,38 +132,31 @@ export function pd(): FormSchema[] {
 
 export function dx(): FormSchema[] {
   return [
-    {
-      field: 'content',
-      component: 'Input',
-      label: '题目内容',
-      colProps: { span: 18 },
-      componentProps: { disabled: true },
-    },
     // 单选
     {
-      field: 'selectionList',
+      field: 'answer1',
       component: 'RadioGroup',
       label: '单选',
       colProps: {
-        span: 18,
+        span: 8,
       },
       componentProps: {
         options: [
           {
             label: 'A',
-            value: 0,
+            value: 'a',
           },
           {
             label: 'B',
-            value: 1,
+            value: 'b',
           },
           {
             label: 'C',
-            value: 2,
+            value: 'c',
           },
           {
             label: 'D',
-            value: 3,
+            value: 'd',
           },
         ],
       },
@@ -173,16 +166,9 @@ export function dx(): FormSchema[] {
 
 export function duox(): FormSchema[] {
   return [
-    {
-      field: 'content',
-      component: 'Input',
-      label: '题目内容',
-      colProps: { span: 18 },
-      componentProps: { disabled: true },
-    },
     // 多选
     {
-      field: 'field5',
+      field: 'answer1',
       component: 'CheckboxGroup',
       label: '多选',
       colProps: {
@@ -191,12 +177,28 @@ export function duox(): FormSchema[] {
       componentProps: {
         options: [
           {
-            label: '选项1',
-            value: '1',
+            label: 'A',
+            value: 'a',
           },
           {
-            label: '选项2',
-            value: '2',
+            label: 'B',
+            value: 'b',
+          },
+          {
+            label: 'C',
+            value: 'c',
+          },
+          {
+            label: 'D',
+            value: 'd',
+          },
+          {
+            label: 'E',
+            value: 'e',
+          },
+          {
+            label: 'F',
+            value: 'f',
           },
         ],
       },

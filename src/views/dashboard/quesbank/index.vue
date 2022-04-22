@@ -20,6 +20,7 @@
       v-model="level"
       v-if="data.detail"
     />
+    <a-button @click="sortByTime">点击按创建时间排序</a-button>
 
     <div class="p-4">
       <BasicTable
@@ -28,43 +29,52 @@
         :dataSource="data.questionList"
         v-if="data.detail"
         @change="pageChange"
+      >
+        <template #action="{ record, column }">
+          <TableAction :actions="createActions(record, column)" />
+        </template>
+      </BasicTable>
+    </div>
+
+    <CollapseContainer :title="'题目ID：' + `${data.quesDetail.id}`" v-if="!data.detail">
+      <div class="m-15" style="font-size: 20px">{{ data.quesDetail.content }}</div>
+      <BasicForm
+        v-if="!data.detail"
+        @register="register1"
+        @submit="handleSubmit"
+        @reset="handleReset"
+        :schemas="data.schemas"
       />
-    </div>
-
-    <div v-if="!data.detail">
-      <div>ID{{ data.quesDetail.id }}</div>
-      <h1>答案{{ data.quesDetail.answer }}</h1>
-      <h1>问题{{ data.quesDetail.content }}</h1>
-
-      <button @click="lastQues">上一个</button>
-      <button @click="nextQues">下一个</button>
-      <button @click="addErrK">添加到错题库</button>
-      <button @click="addCollK">添加到收藏夹</button>
-    </div>
-
-    <button v-if="!data.detail" @click="exit">退出训练</button>
-
-    <!-- autoFocusFirstItem
-      :labelWidth="200"
-      :schemas="schemas"
-    :actionColOptions="{ span: 24 }"-->
-    <BasicForm
-      v-if="!data.detail"
-      @register="register1"
-      @submit="handleSubmit"
-      @reset="handleReset"
-      :schemas="data.schemas"
-    />
+      <a-button @click="exit" class="m-5">退出训练</a-button>
+      <a-button @click="lookAnswer" class="m-5">查看答案</a-button>
+      <a-button @click="lastQues" class="m-5">上一个</a-button>
+      <a-button @click="nextQues" class="m-5">下一个</a-button>
+      <a-button @click="addErrK" class="m-5">添加到错题库</a-button>
+      <a-button @click="addCollK" class="m-5">添加到收藏夹</a-button>
+    </CollapseContainer>
+    <CollapseContainer title="题目答案" v-if="data.answerIf" :canExpan="false">
+      <h1 v-if="data.quesDetail.answer">答案：{{ data.quesDetail.answer }}</h1>
+      <h1 v-if="data.quesDetail.rightAnswer">答案：{{ data.quesDetail.rightAnswer }}</h1>
+      <h1 v-if="data.quesDetail.analysis">答案解析：{{ data.quesDetail.analysis }}</h1>
+    </CollapseContainer>
   </PageWrapper>
 </template>
 <script lang="ts">
+import { CollapseContainer } from '/@/components/Container/index';
 import { defineComponent, onMounted, reactive, toRefs, ref, computed } from 'vue';
 import Icon from '/@/components/Icon/index';
 import { cardList } from './data';
 import { PageWrapper } from '/@/components/Page';
 import { Card, Row, Col, List } from 'ant-design-vue';
 import { getQuestion } from '/@/api/question/question';
-import { BasicTable, ColumnChangeParam, ActionItem, useTable } from '/@/components/Table';
+import {
+  BasicTable,
+  ColumnChangeParam,
+  ActionItem,
+  useTable,
+  BasicColumn,
+  TableAction,
+} from '/@/components/Table';
 import { getBasicColumns, getBasicData } from './tableData';
 import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
 import { useRouter } from 'vue-router';
@@ -160,6 +170,8 @@ export default defineComponent({
     [Col.name]: Col,
     BasicTable,
     BasicForm,
+    TableAction,
+    CollapseContainer,
   },
 
   setup() {
@@ -213,6 +225,12 @@ export default defineComponent({
       sortFn: () => {
         console.log(getSelectRows());
       },
+      actionColumn: {
+        width: 160,
+        title: 'Action',
+        dataIndex: 'action',
+        slots: { customRender: 'action' },
+      },
     });
 
     // 双向绑定变量
@@ -230,6 +248,7 @@ export default defineComponent({
       quesDetail: {},
       detailId: 0,
       schemas: [],
+      answerIf: false,
     });
 
     // 点击筛选按钮
@@ -387,6 +406,7 @@ export default defineComponent({
               throw '循环终止';
             } else {
               data.detailId = list[index - 1].id;
+              closeAnswer();
               QuestionDetail(data.detailId, typeToId(list[index - 1].type));
               throw '循环终止';
             }
@@ -408,6 +428,7 @@ export default defineComponent({
               throw '循环终止';
             } else {
               data.detailId = list[index + 1].id;
+              closeAnswer();
               QuestionDetail(data.detailId, typeToId(list[index + 1].type));
               throw '循环终止';
             }
@@ -472,27 +493,159 @@ export default defineComponent({
       }
     }
 
+    // const handleSubmit = () => {
+    //   console.log(getFieldsValue());
+    //   if (data.quesDetail.type === 1) {
+    //     if (data.quesDetail.answer == getFieldsValue().answer1) {
+    //       setFieldsValue({ answer1: null });
+    //       notification.success({
+    //         message: '答案正确 系统将自动跳转到下一题...',
+    //         duration: 3,
+    //       });
+    //       nextQues();
+    //     } else {
+    //       setFieldsValue({ answer1: null });
+    //       notification.success({
+    //         message: '答案错误 即将添加到错题库...',
+    //         duration: 3,
+    //       });
+    //       addErrK();
+    //     }
+    //   } else if (data.quesDetail.type === 2) {
+    //     console.log(data.quesDetail.rightAnswer);
+    //     console.log(getFieldsValue());
+    //     if (data.quesDetail.rightAnswer == getFieldsValue().answer1) {
+    //       setFieldsValue({ answer1: null });
+    //       notification.success({
+    //         message: '答案正确',
+    //         duration: 3,
+    //       });
+    //       nextQues();
+    //     } else {
+    //       setFieldsValue({ answer1: null });
+    //       notification.success({
+    //         message: '答案错误 即将添加到错题库...',
+    //         duration: 3,
+    //       });
+    //       addErrK();
+    //     }
+    //   } else if (data.quesDetail.type === 3) {
+    //     console.log(data.quesDetail.rightAnswer);
+    //     console.log(getFieldsValue().answer1.join(''));
+    //     if (data.quesDetail.rightAnswer == getFieldsValue().answer1.join('')) {
+    //       setFieldsValue({ answer1: null });
+    //       notification.success({
+    //         message: '答案正确',
+    //         duration: 3,
+    //       });
+    //       nextQues();
+    //     } else {
+    //       setFieldsValue({ answer1: null });
+    //       notification.success({
+    //         message: '答案错误 即将添加到错题库...',
+    //         duration: 3,
+    //       });
+    //       addErrK();
+    //     }
+    //   }
+    // };
+
+    // 提交选项
     const handleSubmit = () => {
-      console.log(getFieldsValue());
+      console.log(getFieldsValue().answer1);
+      if (getFieldsValue().answer1 == undefined) {
+        notification.error({
+          message: '请输入答案',
+          duration: 3,
+        });
+        return;
+      }
       if (data.quesDetail.type === 1) {
         if (data.quesDetail.answer == getFieldsValue().answer1) {
           setFieldsValue({ answer1: null });
+          closeAnswer();
           notification.success({
-            message: '答案正确',
+            message: '答案正确 系统将自动跳转到下一题...',
+            duration: 3,
+          });
+          // del(data.detailId);
+          nextQues();
+        } else {
+          setFieldsValue({ answer1: null });
+          notification.error({
+            message: '答案错误',
+            duration: 3,
+          });
+        }
+      } else if (data.quesDetail.type === 2) {
+        console.log(data.quesDetail.rightAnswer);
+        console.log(getFieldsValue());
+        if (data.quesDetail.rightAnswer == getFieldsValue().answer1) {
+          setFieldsValue({ answer1: null });
+          closeAnswer();
+          notification.success({
+            message: '答案正确 系统将自动跳转到下一题...',
             duration: 3,
           });
           nextQues();
         } else {
           setFieldsValue({ answer1: null });
-          notification.success({
-            message: '答案错误 即将添加到错题库...',
+          notification.error({
+            message: '答案错误',
             duration: 3,
           });
-          addErrK();
+        }
+      } else if (data.quesDetail.type === 3) {
+        console.log(data.quesDetail.rightAnswer);
+        console.log(getFieldsValue().answer1.join(''));
+        if (data.quesDetail.rightAnswer == getFieldsValue().answer1.join('')) {
+          setFieldsValue({ answer1: null });
+          closeAnswer();
+          notification.success({
+            message: '答案正确 系统将自动跳转到下一题...',
+            duration: 3,
+          });
+          nextQues();
+        } else {
+          setFieldsValue({ answer1: null });
+          notification.error({
+            message: '答案错误',
+            duration: 3,
+          });
         }
       }
     };
 
+    function createActions(record: EditRecordRow, column: BasicColumn): ActionItem[] {
+      return [
+        {
+          label: '查看',
+          color: 'success',
+          onClick: questionDetail.bind(null, record),
+        },
+        // {
+        //   label: '删除',
+        //   color: 'success',
+        // },
+      ];
+    }
+
+    const lookAnswer = () => {
+      data.answerIf = true;
+    };
+
+    const closeAnswer = () => {
+      data.answerIf = false;
+    };
+
+    // 按时间排序
+    const sortByTime = () => {
+      console.log('排序');
+      data.obj.orderRule = (data.obj.orderRule + 1) % 2;
+      data.obj.pageNum = getPaginationRef().current;
+      data.obj.pageSize = getPaginationRef().pageSize;
+      getQuestions();
+    };
     return {
       prefixCls: 'list-card',
       list: cardList,
@@ -515,6 +668,10 @@ export default defineComponent({
       addCollK,
       getContent,
       handleSubmit,
+      createActions,
+      lookAnswer,
+      closeAnswer,
+      sortByTime,
     };
   },
 });

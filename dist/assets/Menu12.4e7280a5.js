@@ -1,0 +1,1 @@
+import{av as o,a as n,I as t,E as s,o as a,h as c,n as r,z as u,m as p}from"./index.976f028d.js";const _=n({name:"Menu12Demo",components:{Input:t}}),d={class:"p-5"},m=u(" \u591A\u5C42\u7EA7\u7F13\u5B58-\u9875\u97621-2 "),l=p("br",null,null,-1);function i(f,h,v,x,B,I){const e=s("Input");return a(),c("div",d,[m,l,r(e)])}var C=o(_,[["render",i]]);export{C as default};
