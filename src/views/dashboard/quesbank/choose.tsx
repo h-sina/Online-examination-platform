@@ -192,14 +192,14 @@ export function duox(): FormSchema[] {
             label: 'D',
             value: 'd',
           },
-          {
-            label: 'E',
-            value: 'e',
-          },
-          {
-            label: 'F',
-            value: 'f',
-          },
+          // {
+          //   label: 'E',
+          //   value: 'e',
+          // },
+          // {
+          //   label: 'F',
+          //   value: 'f',
+          // },
         ],
       },
     },

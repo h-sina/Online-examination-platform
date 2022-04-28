@@ -20,7 +20,7 @@
       v-model="level"
       v-if="data.detail"
     />
-    <a-button @click="sortByTime">点击按创建时间排序</a-button>
+    <a-button @click="sortByTime" v-if="data.detail">点击按创建时间排序</a-button>
 
     <div class="p-4">
       <BasicTable
@@ -37,7 +37,10 @@
     </div>
 
     <CollapseContainer :title="'题目ID：' + `${data.quesDetail.id}`" v-if="!data.detail">
-      <div class="m-15" style="font-size: 20px">{{ data.quesDetail.content }}</div>
+      <div class="m-15">{{ data.quesDetail.content }}</div>
+      <ul class="m-15" v-for="i in data.quesDetail.selectionList" :key="data.quesDetail.id">
+        <li>{{ i }}</li>
+      </ul>
       <BasicForm
         v-if="!data.detail"
         @register="register1"
@@ -576,6 +579,7 @@ export default defineComponent({
             message: '答案错误',
             duration: 3,
           });
+          addErrK();
         }
       } else if (data.quesDetail.type === 2) {
         console.log(data.quesDetail.rightAnswer);
@@ -591,9 +595,10 @@ export default defineComponent({
         } else {
           setFieldsValue({ answer1: null });
           notification.error({
-            message: '答案错误',
+            message: '答案错误 题目自动添加到错题库中...',
             duration: 3,
           });
+          addErrK();
         }
       } else if (data.quesDetail.type === 3) {
         console.log(data.quesDetail.rightAnswer);
@@ -609,7 +614,7 @@ export default defineComponent({
         } else {
           setFieldsValue({ answer1: null });
           notification.error({
-            message: '答案错误',
+            message: '答案错误 题目自动添加到错题库中...',
             duration: 3,
           });
         }

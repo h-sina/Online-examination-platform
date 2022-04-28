@@ -18,6 +18,15 @@ enum Api {
   TestRetry = '/testRetry',
   UpdateUserInfo = '/user/student/',
   GetMessage = '/user/notice',
+  UpdateAvatar = '/user/uploadAvatar',
+}
+/**
+ * @description: user avatar api
+ */
+export function updateAvatar() {
+  return defHttp.post({
+    url: Api.UpdateAvatar,
+  });
 }
 
 /**
