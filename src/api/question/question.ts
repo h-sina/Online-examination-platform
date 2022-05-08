@@ -12,6 +12,8 @@ enum Api {
   AddQuestionDetail5 = '/question/essay/add',
 
   UpdateQuestionDetail = '/question/update',
+  AddPaperF = '/exam/paper/add',
+  AddPaperS = '/exam/bigques/add',
 }
 
 /**
@@ -57,7 +59,7 @@ export function updateQuestionDetail(params) {
  * @description: 添加试题第一步
  */
 export function addQuestionDetailF(params) {
-  return defHttp.get({
+  return defHttp.post({
     url: Api.AddQuestionDetailF,
     params,
   });
@@ -109,6 +111,26 @@ export function addQuestionDetail4(params) {
 export function addQuestionDetail5(params) {
   return defHttp.post({
     url: Api.AddQuestionDetail5,
+    params,
+  });
+}
+
+/**
+ * @description: 创建试卷第一步
+ */
+export function addPaperF(params) {
+  return defHttp.post({
+    url: Api.AddPaperF,
+    params,
+  });
+}
+
+/**
+ * @description: 创建试卷第二步
+ */
+export function addPaperS(params) {
+  return defHttp.post({
+    url: Api.AddPaperS,
     params,
   });
 }
