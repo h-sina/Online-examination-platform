@@ -3,7 +3,7 @@
     <div class="flex justify-center">
       <div class="demo-wrap p-10 m-5">
         <div v-show="data.showF">
-          analysis
+          <RightCircleTwoTone />analysis
           <a-input type="text" :value="data.formF.analysis" />
           <br />content
           <a-input type="text" :value="data.formF.content" />
@@ -98,10 +98,10 @@ import {
 } from '/@/api/question/question';
 import { useMessage } from '/@/hooks/web/useMessage';
 const { notification } = useMessage();
-
+import { RightCircleTwoTone } from '@ant-design/icons-vue';
 export default defineComponent({
   name: 'Subject',
-  components: {},
+  components: { RightCircleTwoTone },
   setup() {
     const data = reactive({
       levelList: ['简单', '中等', '困难'],
