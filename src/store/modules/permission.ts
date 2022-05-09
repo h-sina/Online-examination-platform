@@ -171,16 +171,11 @@ export const usePermissionStore = defineStore({
           });
 
           if (roleList == 'student') {
-            menuList.splice(2, 10);
+            menuList.splice(2, 2);
           } else if (roleList == 'teacher') {
-            menuList.splice(1, 1);
-            menuList.splice(2, 9);
+            menuList.splice(3);
           } else if (roleList == 'sa') {
-            menuList.splice(1, 1);
-            menuList.splice(3, 8);
           } else {
-            // menuList.splice(1, 1);
-            menuList.splice(4, 8);
           }
           this.setFrontMenuList(menuList);
           // Convert multi-level routing to level 2 routing
