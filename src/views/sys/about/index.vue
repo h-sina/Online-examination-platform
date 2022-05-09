@@ -9,16 +9,31 @@
       </div>
     </template>
     <Description @register="infoRegister" class="enter-y" />
+    <QrCode :value="qrCodeUrl" :logo="LogoImg" />
+
     <!-- <Description @register="register" class="my-4 enter-y" />
     <Description @register="registerDev" class="enter-y" />-->
   </PageWrapper>
 </template>
 <script lang="ts" setup>
 import { h } from 'vue';
+import { defineComponent, ref, unref } from 'vue';
+
 import { Tag } from 'ant-design-vue';
 import { PageWrapper } from '/@/components/Page';
 import { Description, DescItem, useDescription } from '/@/components/Description/index';
 import { GITHUB_URL, SITE_URL, DOC_URL } from '/@/settings/siteSetting';
+
+import { QrCode, QrCodeActionType } from '/@/components/Qrcode/index';
+import LogoImg from '/@/assets/images/TechLifeCommunication.png';
+
+const qrCodeUrl = 'https://h-sina.404name.top/';
+const qrRef = ref<Nullable<QrCodeActionType>>(null);
+function download() {
+  const qrEl = unref(qrRef);
+  if (!qrEl) return;
+  qrEl.download('文件名');
+}
 
 const { pkg, lastBuildTime } = __APP_INFO__;
 
@@ -55,6 +70,9 @@ const infoSchema: DescItem[] = [
     label: 'Github',
     field: 'github',
     render: commonLinkRender('Github'),
+  },
+  {
+    label: '扫码预览',
   },
 ];
 
