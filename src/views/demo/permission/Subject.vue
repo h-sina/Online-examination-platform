@@ -2,82 +2,111 @@
   <div>
     <div class="flex justify-center">
       <div class="demo-wrap p-10 m-5">
-        <div v-show="data.showF">
-          <RightCircleTwoTone />analysis
-          <a-input type="text" :value="data.formF.analysis" />
-          <br />content
-          <a-input type="text" :value="data.formF.content" />
-          <br />knowledgePointId
-          <a-input type="text" :value="data.formF.knowledgePointId" />
+        <a-steps :current="currentStep">
+          <a-step title="第一步" description="添加描述" />
+          <a-step title="第二步" description="添加题目" />
+          <a-step title="建题" description="将会花点时间..." />
+        </a-steps>
 
-          <br />title
-          <a-input type="text" :value="data.formF.title" />
+        <div v-show="showF" class="m-10">
+          <a-form-item label="题目名称">
+            <a-input type="text" :value="formF.title" />
+          </a-form-item>
 
-          <br />level
-          <div v-for="(item, index) in data.levelList">
-            <input
-              type="radio"
-              name="level"
-              :value="++index"
-              v-model="data.formF.level"
-              :label="item"
-            />
-            {{ item }}
-          </div>
+          <a-form-item label="题目知识点">
+            <a-input type="text" :value="formF.knowledgePointId" />
+          </a-form-item>
 
-          <br />permission
-          <div v-for="(item, index) in data.permissionList">
-            <input
-              type="radio"
-              name="permission"
-              :value="--index"
-              v-model="data.formF.permission"
-              :label="item"
-            />
-            {{ item }}
-          </div>
+          <a-form-item label="题目分析">
+            <a-input type="text" :value="formF.analysis" />
+          </a-form-item>
 
-          <br />type
-          <div v-for="(item, index) in data.typeList">
-            <input
-              type="radio"
-              name="type"
-              :value="++index"
-              v-model="data.formF.type"
-              :label="item"
-            />
-            {{ item }}
-          </div>
-          <br />
-          <a-button @click="submitF">提交问题第一步</a-button>
+          <a-form-item label="题目内容">
+            <a-input type="text" :value="formF.content" />
+          </a-form-item>
+          <a-form-item label="题目难度">
+            <a-radio-group v-model:value="formF.level">
+              <a-radio :value="++index" name="level" v-for="(item, index) in levelList">{{ item }}</a-radio>
+            </a-radio-group>
+          </a-form-item>
+
+          <a-form-item label="题目权限">
+            <a-radio-group v-model:value="formF.permission">
+              <a-radio
+                :value="--index"
+                name="permission"
+                v-for="(item, index) in permissionList"
+              >{{ item }}</a-radio>
+            </a-radio-group>
+          </a-form-item>
+
+          <a-form-item label="题目类型">
+            <a-radio-group v-model:value="formF.type">
+              <a-radio :value="++index" name="type" v-for="(item, index) in typeList">{{ item }}</a-radio>
+            </a-radio-group>
+          </a-form-item>
+
+          <a-button shape="round" @click="submitF">👉下一步</a-button>
         </div>
 
-        <div v-show="data.showS">
-          <div v-show="data.formF.type === 1">
-            <h1>判断题</h1>answer
-            <a-input type="text" :value="data.quesList1.answer" />answerRule
-            <a-input type="text" :value="data.quesList1.answerRule" />
+        <div v-show="showS" class="m-10">
+          <div v-show="formF.type === 1">
+            <b class="mb-5">判断题</b>
+            <a-form-item label="题目答案">
+              <a-input type="text" :value="quesList1.answer" />
+            </a-form-item>
+            <a-form-item label="答案规则">
+              <a-textarea type="text" :value="quesList1.answerRule" />
+            </a-form-item>
           </div>
-          <div v-show="data.formF.type === 2">
-            <h1>单选题</h1>answer
-            <a-input type="text" :value="data.quesList2.answer" />
+
+          <div v-show="formF.type === 2">
+            <b class="mb-5">单选题</b>
+            <a-form-item label="题目答案">
+              <a-input type="text" :value="quesList2.answer" />
+            </a-form-item>
           </div>
-          <div v-show="data.formF.type === 3">
-            <h1>多选题</h1>rightAnswer
-            <a-input type="text" :value="data.quesList3.rightAnswer" />selection
-            <a-input type="text" :value="data.quesList3.selection" />
+
+          <div v-show="formF.type === 3">
+            <b class="mb-5">多选题</b>
+            <a-form-item label="题目答案">
+              <a-input type="text" :value="quesList3.rightAnswer" />
+            </a-form-item>
+            <a-form-item label="答案规则">
+              <a-textarea type="text" :value="quesList3.selection" />
+            </a-form-item>
           </div>
-          <div v-show="data.formF.type === 4">
-            <h1>填空题</h1>rightAnswer
-            <a-input type="text" :value="data.quesList3.rightAnswer" />selection
-            <a-input type="text" :value="data.quesList3.selection" />
+
+          <div v-show="formF.type === 4">
+            <b class="mb-5">填空题</b>
+            <a-form-item label="题目答案">
+              <a-input type="text" :value="quesList3.rightAnswer" />selection
+            </a-form-item>
+            <a-form-item label="答案规则">
+              <a-textarea type="text" :value="quesList3.selection" />
+            </a-form-item>
           </div>
-          <div v-show="data.formF.type === 5">
-            <h1>论述题</h1>answer
-            <a-input type="text" :value="data.quesList4.answer" />answerNum
-            <a-input type="text" :value="data.quesList4.answerNum" />
+
+          <div v-show="formF.type === 5">
+            <b class="mb-5">论述题</b>
+            <a-form-item label="题目答案">
+              <a-input type="text" :value="quesList4.answer" />
+            </a-form-item>
+            <a-form-item label="答案规则">
+              <a-textarea type="text" :value="quesList4.answerNum" />
+            </a-form-item>
           </div>
-          <a-button @click="submitS" class="mt-5">创建试题</a-button>
+
+          <a-button shape="round" @click="submitS" class="mt-5">创建试题</a-button>
+        </div>
+
+        <div v-show="showE" class="flex justify-center mt-20" style="flex-direction: column">
+          <CheckCircleTwoTone :style="{ fontSize: '100px' }" />
+          <div class="flex justify-center mt-5" style="font-size: 20px">完成建题</div>
+
+          <div class="flex justify-center mt-10">
+            <a-button shape="round" @click="againPaper">再次建题</a-button>
+          </div>
         </div>
       </div>
     </div>
@@ -85,7 +114,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, toRefs } from 'vue';
+import { CheckCircleTwoTone } from '@ant-design/icons-vue';
 
 import {
   addQuestionDetailF,
@@ -98,10 +128,9 @@ import {
 } from '/@/api/question/question';
 import { useMessage } from '/@/hooks/web/useMessage';
 const { notification } = useMessage();
-import { RightCircleTwoTone } from '@ant-design/icons-vue';
 export default defineComponent({
   name: 'Subject',
-  components: { RightCircleTwoTone },
+  components: { CheckCircleTwoTone },
   setup() {
     const data = reactive({
       levelList: ['简单', '中等', '困难'],
@@ -109,6 +138,8 @@ export default defineComponent({
       typeList: ['判断题', '单选题', '多选题', '填空题', '论述题'],
       showF: true,
       showS: false,
+      showE: false,
+      currentStep: 0,
       formF: {
         analysis: 'string',
         content: 'string',
@@ -117,6 +148,16 @@ export default defineComponent({
         level: 1,
         permission: 0,
         title: 'string',
+        type: 1,
+      },
+      formFC: {
+        analysis: '',
+        content: '',
+        creatorId: 0,
+        knowledgePointId: 0,
+        level: 1,
+        permission: 0,
+        title: '',
         type: 1,
       },
       quesList1: {
@@ -138,15 +179,32 @@ export default defineComponent({
         answerNum: 0,
         questionId: 0,
       },
+      quesList1C: {
+        answer: '',
+        answerRule: '',
+        questionId: 0,
+      },
+      quesList2C: {
+        answer: 0,
+        questionId: 0,
+      },
+      quesList3C: {
+        rightAnswer: '',
+        selection: '',
+        questionId: 0,
+      },
+      quesList4C: {
+        answer: '',
+        answerNum: 0,
+        questionId: 0,
+      },
       questionId: 0,
     });
-    const submit = () => {
-      const type = submitF();
-      submitS(type);
-      getList();
-    };
+
     async function submitS() {
       console.log('创建试题第二步前' + data.formF.type);
+      console.log(data.quesList2);
+
       data.quesList1.questionId = data.questionId;
       data.quesList2.questionId = data.questionId;
       data.quesList3.questionId = data.questionId;
@@ -170,66 +228,88 @@ export default defineComponent({
           res = await addQuestionDetail5(data.quesList1);
           break;
       }
-      if (res.code === 'ITEST-200') {
-        notification.success({
-          message: res.msg,
-          duration: 3,
-        });
-        data.showF = true;
-        data.showS = false;
-      } else {
-        notification.error({
-          message: '创建失败请联系工作人员',
-          duration: 3,
-        });
-      }
+      // 处理反馈
+      responseMsg(res);
+      // 变换表格
+      showformS(false);
+      showformE(true);
     }
     async function submitF() {
       console.log('请求问题第一步前');
-      console.log(data.formF);
       const res = await addQuestionDetailF(data.formF);
-      console.log(res);
+      // 处理反馈
+      responseMsg(res);
+      // 变换表格
+      showformF(false);
+      showformS(true);
+      // 获取试卷ID
+      data.questionId = res.data;
+    }
+
+    // 根据返回的数据信息处理反馈
+    function responseMsg(res) {
       if (res.code === 'ITEST-200') {
         notification.success({
           message: res.msg,
           duration: 3,
         });
-        data.showF = false;
-        data.showS = true;
-        data.questionId = res.data;
       } else {
         notification.error({
           message: '创建失败请联系工作人员',
           duration: 3,
         });
       }
+    }
 
-      // return res.type;
+    // 切换显示
+    function showformF(show) {
+      data.showF = show;
+      if (show) data.currentStep = 0;
     }
-    async function getList() {
-      // const res = await getQuestion();
-      // console.log(res);
-      // data.quesList = res.data.list;
+    function showformS(show) {
+      data.showS = show;
+      if (show) data.currentStep = 1;
     }
-    async function deleteQues() {
-      // const res = await deleteQuestion();
-      // console.log(res);
-      // getList()
+    function showformE(show) {
+      data.showE = show;
+      if (show) data.currentStep = 2;
     }
-    async function updateQues() {
-      // const res = await updateQuestionDetail(formF);
-      // console.log(res);
-      // getList()
+
+    // 清除表单数据
+    function clearFormF() {
+      data.formF = JSON.parse(JSON.stringify(data.formFC));
     }
+    function clearFormS() {
+      data.quesList1 = JSON.parse(JSON.stringify(data.quesList1C));
+      data.quesList2 = JSON.parse(JSON.stringify(data.quesList2C));
+      data.quesList3 = JSON.parse(JSON.stringify(data.quesList3C));
+      data.quesList4 = JSON.parse(JSON.stringify(data.quesList4C));
+    }
+
+    // 再次组卷
+    function againPaper() {
+      // 清空表单
+      clearFormS();
+      clearFormF();
+
+      // 最后一步
+      showformE(false);
+      showformF(true);
+    }
+
     return {
-      prefixCls: 'list-card',
-      data,
-      submit,
+      ...toRefs(data),
       submitF,
       submitS,
-      getList,
-      deleteQues,
-      updateQues,
+      responseMsg,
+
+      clearFormS,
+      clearFormF,
+      showformS,
+      showformF,
+      showformE,
+
+      againPaper,
     };
   },
 });
