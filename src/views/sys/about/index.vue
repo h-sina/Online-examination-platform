@@ -9,7 +9,6 @@
       </div>
     </template>
     <Description @register="infoRegister" class="enter-y" />
-    <a-button color="success">成功按钮</a-button>
     <!-- <Description @register="register" class="my-4 enter-y" />
     <Description @register="registerDev" class="enter-y" />-->
   </PageWrapper>

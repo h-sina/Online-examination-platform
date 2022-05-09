@@ -93,6 +93,7 @@ const dashboard: AppRouteModule = {
     //     title: '题目详情',
     //   },
     // },
+
     {
       path: 'collect',
       name: 'Collect',
@@ -102,17 +103,17 @@ const dashboard: AppRouteModule = {
       },
     },
     {
-      path: 'exam',
-      name: 'Exam',
-      component: () => import('/@/views/dashboard/exam/index.vue'),
+      path: 'myExam',
+      name: 'MyExam',
+      component: () => import('/@/views/dashboard/myExam/index.vue'),
       meta: {
         title: '我的考试',
       },
     },
     {
-      path: 'class',
-      name: 'Class',
-      component: () => import('/@/views/dashboard/class/index.vue'),
+      path: 'myClass',
+      name: 'MyClass',
+      component: () => import('/@/views/dashboard/myClass/index.vue'),
       meta: {
         title: '我的班级',
       },
