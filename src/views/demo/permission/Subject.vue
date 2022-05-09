@@ -10,19 +10,19 @@
 
         <div v-show="showF" class="m-10">
           <a-form-item label="题目名称">
-            <a-input type="text" :value="formF.title" />
+            <a-input type="text" v-model:value="formF.title" />
           </a-form-item>
 
           <a-form-item label="题目知识点">
-            <a-input type="text" :value="formF.knowledgePointId" />
+            <a-input type="text" v-model:value="formF.knowledgePointId" />
           </a-form-item>
 
           <a-form-item label="题目分析">
-            <a-input type="text" :value="formF.analysis" />
+            <a-input type="text" v-model:value="formF.analysis" />
           </a-form-item>
 
           <a-form-item label="题目内容">
-            <a-input type="text" :value="formF.content" />
+            <a-input type="text" v-model:value="formF.content" />
           </a-form-item>
           <a-form-item label="题目难度">
             <a-radio-group v-model:value="formF.level">
@@ -53,47 +53,47 @@
           <div v-show="formF.type === 1">
             <b class="mb-5">判断题</b>
             <a-form-item label="题目答案">
-              <a-input type="text" :value="quesList1.answer" />
+              <a-input type="text" v-model:value="quesList1.answer" />
             </a-form-item>
             <a-form-item label="答案规则">
-              <a-textarea type="text" :value="quesList1.answerRule" />
+              <a-textarea type="text" v-model:value="quesList1.answerRule" />
             </a-form-item>
           </div>
 
           <div v-show="formF.type === 2">
             <b class="mb-5">单选题</b>
             <a-form-item label="题目答案">
-              <a-input type="text" :value="quesList2.answer" />
+              <a-input type="text" v-model:value="quesList2.answer" />
             </a-form-item>
           </div>
 
           <div v-show="formF.type === 3">
             <b class="mb-5">多选题</b>
             <a-form-item label="题目答案">
-              <a-input type="text" :value="quesList3.rightAnswer" />
+              <a-input type="text" v-model:value="quesList3.rightAnswer" />
             </a-form-item>
             <a-form-item label="答案规则">
-              <a-textarea type="text" :value="quesList3.selection" />
+              <a-textarea type="text" v-model:value="quesList3.selection" />
             </a-form-item>
           </div>
 
           <div v-show="formF.type === 4">
             <b class="mb-5">填空题</b>
             <a-form-item label="题目答案">
-              <a-input type="text" :value="quesList3.rightAnswer" />selection
+              <a-input type="text" v-model:value="quesList3.rightAnswer" />selection
             </a-form-item>
             <a-form-item label="答案规则">
-              <a-textarea type="text" :value="quesList3.selection" />
+              <a-textarea type="text" v-model:value="quesList3.selection" />
             </a-form-item>
           </div>
 
           <div v-show="formF.type === 5">
             <b class="mb-5">论述题</b>
             <a-form-item label="题目答案">
-              <a-input type="text" :value="quesList4.answer" />
+              <a-input type="text" v-model:value="quesList4.answer" />
             </a-form-item>
             <a-form-item label="答案规则">
-              <a-textarea type="text" :value="quesList4.answerNum" />
+              <a-textarea type="text" v-model:value="quesList4.answerNum" />
             </a-form-item>
           </div>
 
@@ -237,13 +237,21 @@ export default defineComponent({
     async function submitF() {
       console.log('请求问题第一步前');
       const res = await addQuestionDetailF(data.formF);
-      // 处理反馈
-      responseMsg(res);
-      // 变换表格
-      showformF(false);
-      showformS(true);
-      // 获取试卷ID
-      data.questionId = res.data;
+      try {
+        // 处理反馈
+        responseMsg(res);
+        // 变换表格
+        showformF(false);
+        showformS(true);
+        // 获取试卷ID
+        data.questionId = res.data;
+      } catch (e) {
+        notification.error({
+          message: '创建失败请联系工作人员',
+          duration: 3,
+        });
+        againPaper();
+      }
     }
 
     // 根据返回的数据信息处理反馈
@@ -254,10 +262,7 @@ export default defineComponent({
           duration: 3,
         });
       } else {
-        notification.error({
-          message: '创建失败请联系工作人员',
-          duration: 3,
-        });
+        throw '错误回到原点';
       }
     }
 
@@ -294,6 +299,7 @@ export default defineComponent({
 
       // 最后一步
       showformE(false);
+      showformS(false);
       showformF(true);
     }
 
