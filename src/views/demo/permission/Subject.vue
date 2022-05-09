@@ -9,44 +9,55 @@
         </a-steps>
 
         <div v-show="showF" class="m-10">
-          <a-form-item label="题目名称">
-            <a-input type="text" v-model:value="formF.title" />
-          </a-form-item>
+          <a-form disabled>
+            <a-form-item label="题目名称">
+              <a-input type="text" v-model:value="formF.title" />
+            </a-form-item>
 
-          <a-form-item label="题目知识点">
-            <a-input type="text" v-model:value="formF.knowledgePointId" />
-          </a-form-item>
+            <a-form-item label="题目知识点">
+              <a-input type="text" v-model:value="formF.knowledgePointId" />
+            </a-form-item>
 
-          <a-form-item label="题目分析">
-            <a-input type="text" v-model:value="formF.analysis" />
-          </a-form-item>
+            <a-form-item label="题目分析">
+              <a-textarea type="text" v-model:value="formF.analysis" />
+            </a-form-item>
 
-          <a-form-item label="题目内容">
-            <a-input type="text" v-model:value="formF.content" />
-          </a-form-item>
-          <a-form-item label="题目难度">
-            <a-radio-group v-model:value="formF.level">
-              <a-radio :value="++index" name="level" v-for="(item, index) in levelList">{{ item }}</a-radio>
-            </a-radio-group>
-          </a-form-item>
+            <a-form-item label="题目内容">
+              <a-textarea type="text" v-model:value="formF.content" />
+            </a-form-item>
+            <a-form-item label="题目难度">
+              <a-radio-group v-model:value="formF.level">
+                <a-radio :value="++index" name="level" v-for="(item, index) in levelList">
+                  {{
+                  item
+                  }}
+                </a-radio>
+              </a-radio-group>
+            </a-form-item>
 
-          <a-form-item label="题目权限">
-            <a-radio-group v-model:value="formF.permission">
-              <a-radio
-                :value="--index"
-                name="permission"
-                v-for="(item, index) in permissionList"
-              >{{ item }}</a-radio>
-            </a-radio-group>
-          </a-form-item>
+            <a-form-item label="题目权限">
+              <a-radio-group v-model:value="formF.permission">
+                <a-radio
+                  :value="--index"
+                  name="permission"
+                  v-for="(item, index) in permissionList"
+                >{{ item }}</a-radio>
+              </a-radio-group>
+            </a-form-item>
 
-          <a-form-item label="题目类型">
-            <a-radio-group v-model:value="formF.type">
-              <a-radio :value="++index" name="type" v-for="(item, index) in typeList">{{ item }}</a-radio>
-            </a-radio-group>
-          </a-form-item>
+            <a-form-item label="题目类型">
+              <a-radio-group v-model:value="formF.type">
+                <a-radio :value="++index" name="type" v-for="(item, index) in typeList">
+                  {{
+                  item
+                  }}
+                </a-radio>
+              </a-radio-group>
+            </a-form-item>
 
-          <a-button shape="round" @click="submitF">👉下一步</a-button>
+            <LoadingOutlined class="mr-5" v-show="loading" />
+            <a-button shape="round" @click="submitF">👉下一步</a-button>
+          </a-form>
         </div>
 
         <div v-show="showS" class="m-10">
@@ -96,6 +107,7 @@
               <a-textarea type="text" v-model:value="quesList4.answerNum" />
             </a-form-item>
           </div>
+          <LoadingOutlined class="mr-5" v-show="loading" />
 
           <a-button shape="round" @click="submitS" class="mt-5">创建试题</a-button>
         </div>
@@ -103,6 +115,7 @@
         <div v-show="showE" class="flex justify-center mt-20" style="flex-direction: column">
           <CheckCircleTwoTone :style="{ fontSize: '100px' }" />
           <div class="flex justify-center mt-5" style="font-size: 20px">完成建题</div>
+          <LoadingOutlined class="mr-5" v-show="loading" />
 
           <div class="flex justify-center mt-10">
             <a-button shape="round" @click="againPaper">再次建题</a-button>
@@ -115,7 +128,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
-import { CheckCircleTwoTone } from '@ant-design/icons-vue';
+import { CheckCircleTwoTone, LoadingOutlined } from '@ant-design/icons-vue';
 
 import {
   addQuestionDetailF,
@@ -130,7 +143,7 @@ import { useMessage } from '/@/hooks/web/useMessage';
 const { notification } = useMessage();
 export default defineComponent({
   name: 'Subject',
-  components: { CheckCircleTwoTone },
+  components: { CheckCircleTwoTone, LoadingOutlined },
   setup() {
     const data = reactive({
       levelList: ['简单', '中等', '困难'],
@@ -139,6 +152,7 @@ export default defineComponent({
       showF: true,
       showS: false,
       showE: false,
+      loading: false,
       currentStep: 0,
       formF: {
         analysis: 'string',
@@ -203,7 +217,7 @@ export default defineComponent({
 
     async function submitS() {
       console.log('创建试题第二步前' + data.formF.type);
-      console.log(data.quesList2);
+      data.loading = true;
 
       data.quesList1.questionId = data.questionId;
       data.quesList2.questionId = data.questionId;
@@ -228,14 +242,33 @@ export default defineComponent({
           res = await addQuestionDetail5(data.quesList1);
           break;
       }
-      // 处理反馈
-      responseMsg(res);
-      // 变换表格
-      showformS(false);
-      showformE(true);
+      try {
+        // 处理反馈
+        responseMsg(res);
+        // 变换表格
+        showformS(false);
+        showformE(true);
+        // 获取试卷ID
+      } catch (e) {
+        notification.error({
+          message: '创建失败请联系工作人员',
+          duration: 3,
+        });
+        againPaper();
+      } finally {
+        data.loading = false;
+      }
     }
     async function submitF() {
       console.log('请求问题第一步前');
+      if (!data.formF.title || !data.formF.content || !data.formF.analysis) {
+        notification.error({
+          message: '名称不能为空',
+          duration: 3,
+        });
+        return;
+      }
+      data.loading = true;
       const res = await addQuestionDetailF(data.formF);
       try {
         // 处理反馈
@@ -251,6 +284,8 @@ export default defineComponent({
           duration: 3,
         });
         againPaper();
+      } finally {
+        data.loading = false;
       }
     }
 
