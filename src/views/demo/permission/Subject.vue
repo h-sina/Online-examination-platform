@@ -317,13 +317,36 @@ export default defineComponent({
 
     // 清除表单数据
     function clearFormF() {
-      data.formF = JSON.parse(JSON.stringify(data.formFC));
+      // data.formF = JSON.parse(JSON.stringify(data.formFC));
+      clearForm(data.formF, { type: 1, level: 1 });
     }
     function clearFormS() {
-      data.quesList1 = JSON.parse(JSON.stringify(data.quesList1C));
-      data.quesList2 = JSON.parse(JSON.stringify(data.quesList2C));
-      data.quesList3 = JSON.parse(JSON.stringify(data.quesList3C));
-      data.quesList4 = JSON.parse(JSON.stringify(data.quesList4C));
+      // data.quesList1 = JSON.parse(JSON.stringify(data.quesList1C));
+      // data.quesList2 = JSON.parse(JSON.stringify(data.quesList2C));
+      // data.quesList3 = JSON.parse(JSON.stringify(data.quesList3C));
+      // data.quesList4 = JSON.parse(JSON.stringify(data.quesList4C));
+      clearForm(data.quesList1);
+      clearForm(data.quesList2);
+      clearForm(data.quesList3);
+      clearForm(data.quesList4);
+    }
+
+    function clearForm(data, obj) {
+      Object.keys(data).forEach((i) => {
+        switch (typeof data[i]) {
+          case 'string':
+            data[i] = '';
+            break;
+          case 'number':
+            data[i] = 0;
+            break;
+        }
+      });
+      if (obj) {
+        Object.keys(obj).map((i) => {
+          data[i] = obj[i];
+        });
+      }
     }
 
     // 再次组卷

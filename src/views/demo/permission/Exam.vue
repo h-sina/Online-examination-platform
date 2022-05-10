@@ -17,11 +17,7 @@
           </a-form-item>
           <a-form-item label="试卷权限">
             <a-radio-group v-model:value="formF.permission">
-              <a-radio :value="--index" name="level" v-for="(i, index) in permissionList">
-                {{
-                i
-                }}
-              </a-radio>
+              <a-radio :value="--index" name="level" v-for="(i, index) in permissionList">{{ i }}</a-radio>
             </a-radio-group>
           </a-form-item>
           <a-button shape="round" @click="submitF">👉下一步</a-button>
@@ -39,11 +35,7 @@
           </a-form-item>
           <a-form-item label="大题类型">
             <a-radio-group v-model:value="formS.type" @change="changeList">
-              <a-radio :value="++index" name="type" v-for="(item, index) in typeList">
-                {{
-                item
-                }}
-              </a-radio>
+              <a-radio :value="++index" name="type" v-for="(item, index) in typeList">{{ item }}</a-radio>
             </a-radio-group>
           </a-form-item>
 
@@ -55,9 +47,11 @@
             >
               <a-checkbox-group v-model:value="quesTempList">
                 <a-checkbox type="checkbox" :value="item.id" v-for="item in list" style="margin: 0">
-                  <a-card
-                    style="width: 300px; margin-top: 5px"
-                  >{{ item.title }}-{{ item.knowledgeName }}-{{ item.level }}-{{ item.analysis }}</a-card>
+                  <a-card style="width: 300px; margin-top: 5px">
+                    {{ item.title }}-{{ item.knowledgeName }}-{{ item.level }}-{{
+                    item.analysis
+                    }}
+                  </a-card>
                 </a-checkbox>
               </a-checkbox-group>
               <img src="../../../../src/assets/images/null.jpg" v-show="list.length === 0" />
@@ -111,11 +105,11 @@ export default defineComponent({
         name: '',
         permission: -1,
       },
-      formFC: {
-        description: '',
-        name: '',
-        permission: -1,
-      },
+      // formFC: {
+      //   description: '',
+      //   name: '',
+      //   permission: -1,
+      // },
       quesTempList: [],
       quesItem: {
         orderId: 1,
@@ -138,14 +132,14 @@ export default defineComponent({
         totalScore: 0,
         type: 1,
       },
-      formSC: {
-        name: '',
-        orderId: 1,
-        paperId: 0,
-        quesTempList: [],
-        totalScore: 0,
-        type: 1,
-      },
+      // formSC: {
+      //   name: '',
+      //   orderId: 1,
+      //   paperId: 0,
+      //   quesTempList: [],
+      //   totalScore: 0,
+      //   type: 1,
+      // },
       obj: {
         orderRule: 0,
         pageNum: 1,
@@ -333,11 +327,29 @@ export default defineComponent({
 
     // 清除表单数据
     function clearFormF() {
-      data.formF = JSON.parse(JSON.stringify(data.formFC));
+      // data.formF = JSON.parse(JSON.stringify(data.formFC));
+      clearForm(data.formF, { permission: -1 });
     }
     function clearFormS() {
-      data.formS = JSON.parse(JSON.stringify(data.formSC));
+      // data.formS = JSON.parse(JSON.stringify(data.formSC));
       data.quesTempList = [];
+      clearForm(data.formS, { orderId: 1, type: 1 });
+    }
+
+    function clearForm(data, obj) {
+      Object.keys(data).forEach((i) => {
+        switch (typeof data[i]) {
+          case 'string':
+            data[i] = '';
+            break;
+          case 'number':
+            data[i] = 0;
+            break;
+        }
+      });
+      Object.keys(obj).map((i) => {
+        data[i] = obj[i];
+      });
     }
 
     return {
