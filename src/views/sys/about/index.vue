@@ -77,7 +77,7 @@ const infoSchema: DescItem[] = [
 ];
 
 const infoData = {
-  version: '1.0.0',
+  version: '1.4.0',
   lastBuildTime: '无限维护',
   doc: DOC_URL,
   preview: SITE_URL,

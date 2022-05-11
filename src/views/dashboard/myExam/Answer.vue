@@ -57,8 +57,24 @@
             @score="computedScore"
             v-show="listCurrent.type === 3"
           />
-          <Tiank v-show="listCurrent.type === 4" />
-          <Lunshu v-show="listCurrent.type === 5" />
+          <Tiank
+            :questionId="item.id"
+            :typeId="listCurrent.type"
+            @score="computedScore"
+            v-show="listCurrent.type === 4"
+          />
+          <Lunshu
+            :questionId="item.id"
+            :typeId="listCurrent.type"
+            @score="computedScore"
+            v-show="listCurrent.type === 5"
+          />
+          <Lunshu
+            :questionId="item.id"
+            :typeId="listCurrent.type"
+            @score="computedScore"
+            v-show="listCurrent.type === 6"
+          />
         </template>
       </a-list>
       <!-- 答题区域 -->
