@@ -29,7 +29,7 @@ import { tabListData, ListItem } from './data';
 import NoticeList from './NoticeList.vue';
 import { useDesign } from '/@/hooks/web/useDesign';
 import { useMessage } from '/@/hooks/web/useMessage';
-import { getNotice } from '/@/api/sys/user.ts';
+import { getNotice, delNotice, readedNotice } from '/@/api/sys/user.ts';
 
 export default defineComponent({
   components: { Popover, BellOutlined, Tabs, TabPane: Tabs.TabPane, Badge, NoticeList },
@@ -70,6 +70,23 @@ export default defineComponent({
       createMessage.success('你点击了通知，ID=' + record.id);
       // 可以直接将其标记为已读（为标题添加删除线）,此处演示的代码会切换删除线状态
       record.titleDelete = !record.titleDelete;
+      // 删除通知
+      console.log(record);
+      // delMessage(record.id)
+    }
+
+    // 删除消息处理
+    async function delMessage(noticeId) {
+      console.log(noticeId);
+      let res = await delNotice(noticeId);
+      console.log(res);
+    }
+
+    // 已阅消息处理
+    async function readedMessage(noticeId) {
+      console.log(noticeId);
+      let res = await delNotice(noticeId);
+      console.log(res);
     }
 
     return {
@@ -77,6 +94,9 @@ export default defineComponent({
       schoolNotice,
       listData,
       prefixCls,
+
+      delMessage,
+      readedMessage,
       // listData,
       count,
       onNoticeClick,

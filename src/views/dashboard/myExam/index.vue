@@ -15,12 +15,17 @@
             :title="`${i.title}`"
             :span="8"
           >
-            <p>{{ i.subject }}</p>
-            <p>{{ i.totalScore }}</p>
-            <p>{{ i.time }}</p>
+            <p>{{ i.teacherName }}</p>
+            <!-- <p>{{ i.title }}</p> -->
+            <!-- <p>{{ i.endTime }} - {{ i.startTime }}</p> -->
             <p>{{ i.startTime }}</p>
             <p>{{ i.endTime }}</p>
-            <a-button shape="round" type="primary" style="margin-top: 16px" @click="enterExam">进入考试</a-button>
+            <a-button
+              shape="round"
+              type="primary"
+              style="margin-top: 16px"
+              @click="enterExam(i.id)"
+            >进入考试</a-button>
           </a-card>
         </a-row>
       </a-tab-pane>
@@ -30,7 +35,7 @@
             <apple-outlined />答题中心
           </span>
         </template>
-        <Answer @subExam="submitExam" />
+        <Answer :paperId="paperId" @subExam="submitExam" />
         <!-- <a-button shape="round" @click="submitExam" class="m-5">提交试卷</a-button>
         <a-button shape="round" @click="submitExam" class="m-5">预览试卷</a-button>-->
       </a-tab-pane>
@@ -40,6 +45,8 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, onMounted, toRefs } from 'vue';
 import { createFakeUserList } from '/@/../mock/falseData.ts';
+import { getExamList } from '/@/api/sys/user';
+
 import Answer from './Answer.vue';
 
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -55,14 +62,23 @@ export default defineComponent({
       examList: [],
       disabledCenter: false,
       disabledExam: true,
+      paperId: 0,
     });
     onMounted(() => {
-      data.examList = createFakeUserList();
+      // data.examList = getExamList();
+      // 加载试卷列表
+      getExamsList();
       loading.value = false;
-
-      console.log(data.list);
+      // console.log(data.list);
     });
-    const enterExam = () => {
+
+    async function getExamsList() {
+      let res = await getExamList();
+      data.examList = res.data;
+      console.log(res);
+    }
+    const enterExam = (id) => {
+      console.log(id);
       // 显示加载loading
       EnterExamLoading.value = true;
 

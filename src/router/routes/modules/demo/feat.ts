@@ -29,6 +29,14 @@ const feat: AppRouteModule = {
         title: '教师管理',
       },
     },
+    {
+      path: 'knowledge',
+      name: 'Knowledge',
+      component: () => import('/@/views/demo/feat/knowledge.vue'),
+      meta: {
+        title: '知识点管理',
+      },
+    },
     //   {
     //     path: 'icon',
     //     name: 'IconDemo',

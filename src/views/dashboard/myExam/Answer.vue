@@ -18,7 +18,11 @@
               <a-button>{{ i.name }}</a-button>
             </div>
 
-            <a-button v-for="(j, index) in i.quesList" style="margin: 10px">{{ 1 + index }}</a-button>
+            <a-button v-for="(j, index) in i.quesList" style="margin: 10px">
+              {{
+              1 + index
+              }}
+            </a-button>
           </div>
         </a-modal>
       </template>
@@ -86,7 +90,7 @@ import { ArrowRightOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue';
 
 import { defineComponent, reactive, ref, onMounted, onUnmounted, toRefs, computed } from 'vue';
 
-import { GetExam } from '/@/api/exam/exam';
+import { getExam } from '/@/api/exam/exam';
 
 import Danxuan from './Danxuan.vue';
 import Panduan from './Panduan.vue';
@@ -139,12 +143,14 @@ export default defineComponent({
       ],
     });
     onMounted(() => {
-      getExam();
+      getExams();
     });
     // 根据试卷ID获取试卷
-    async function getExam() {
+    async function getExams() {
       // props.paperId
-      let res = await GetExam(123456789);
+      let res = await getExam(props.paperId);
+      console.log(res);
+
       if (res.code === 'ITEST-200') {
         data.list = res.data.bigQuesVoList;
         data.creatorId = res.data.creatorId;

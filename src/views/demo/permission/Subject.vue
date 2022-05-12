@@ -15,7 +15,14 @@
             </a-form-item>
 
             <a-form-item label="题目知识点">
-              <a-input type="text" v-model:value="formF.knowledgePointId" />
+              <a-select
+                v-model:value="selected"
+                mode="tags"
+                style="width: 100%"
+                placeholder="搜索知识点🔍"
+                :options="knowledgeNameList"
+                @change="onSearch(selected)"
+              />
             </a-form-item>
 
             <a-form-item label="题目分析">
@@ -139,6 +146,9 @@ import {
   addQuestionDetail5,
   addQuestionDetail1,
 } from '/@/api/question/question';
+
+import { getknowledgeListBysearch } from '/@/api/knowledgePoint/knowledgePoint';
+
 import { useMessage } from '/@/hooks/web/useMessage';
 const { notification } = useMessage();
 export default defineComponent({
@@ -154,6 +164,9 @@ export default defineComponent({
       showE: false,
       loading: false,
       currentStep: 0,
+      knowledgeNameList: [],
+      knowledgeIdList: [],
+      selected: [],
       formF: {
         analysis: 'string',
         content: 'string',
@@ -267,6 +280,12 @@ export default defineComponent({
           duration: 3,
         });
         return;
+      } else if (data.formF.knowledgePointId == 0) {
+        notification.error({
+          message: '请填写存在的知识点',
+          duration: 3,
+        });
+        return;
       }
       data.loading = true;
       const res = await addQuestionDetailF(data.formF);
@@ -361,6 +380,28 @@ export default defineComponent({
       showformF(true);
     }
 
+    // 搜索
+    function onSearch(id) {
+      search(id);
+    }
+
+    // 模糊查询得到知识点list
+    async function search(id) {
+      let res = await getknowledgeListBysearch(id);
+      if (res.data != null) {
+        res.data.forEach((i) => {
+          data.knowledgeIdList.push(i.id);
+          data.knowledgeNameList.push({ value: i.name, id: i.id });
+        });
+      }
+      console.log(data.formF.knowledgePointId);
+      data.knowledgeNameList.forEach((i) => {
+        if (i.value === data.selected[0]) {
+          data.formF.knowledgePointId = i.id;
+        }
+      });
+    }
+
     return {
       ...toRefs(data),
       submitF,
@@ -374,6 +415,7 @@ export default defineComponent({
       showformE,
 
       againPaper,
+      onSearch,
     };
   },
 });

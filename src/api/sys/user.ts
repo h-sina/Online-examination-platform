@@ -17,7 +17,12 @@ enum Api {
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
   UpdateUserInfo = '/user/student/',
+
   GetMessage = '/user/notice',
+  DelNotice = '/user/notice/remove',
+  ReadedNotice = '/user/notice/read',
+  GetExamList = '/user/my-exam',
+
   UpdateAvatar = '/user/uploadAvatar',
 }
 /**
@@ -30,11 +35,38 @@ export function updateAvatar() {
 }
 
 /**
- * @description: user message api
+ * @description: 获取信息列表
  */
 export function getNotice() {
   return defHttp.get({
     url: Api.GetMessage,
+  });
+}
+
+/**
+ * @description: 删除信息
+ */
+export function delNotice(params) {
+  return defHttp.get({
+    url: Api.DelNotice + '/' + params,
+  });
+}
+
+/**
+ * @description: 已阅信息
+ */
+export function readedNotice(params) {
+  return defHttp.get({
+    url: Api.ReadedNotice + '/' + params,
+  });
+}
+
+/**
+ * @description: 我的考试
+ */
+export function getExamList() {
+  return defHttp.get({
+    url: Api.GetExamList,
   });
 }
 
