@@ -3,7 +3,7 @@ name: 打包应用并上传腾讯云
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -45,4 +45,4 @@ jobs:
           # 用户
           REMOTE_USER: 'root'
           # 目标地址
-          TARGET: '/www/wwwroot'
+          TARGET: '/www/wwwroot/dist'
