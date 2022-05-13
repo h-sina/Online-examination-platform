@@ -24,7 +24,7 @@ const permission: AppRouteModule = {
     {
       path: 'subject',
       name: 'Subject',
-      component: () => import('/@/views/demo/permission/subject.vue'),
+      component: () => import('/@/views/demo/permission/Subject.vue'),
       meta: {
         title: '题库管理',
       },
@@ -32,7 +32,7 @@ const permission: AppRouteModule = {
     {
       path: 'exam',
       name: 'Exam',
-      component: () => import('/@/views/demo/permission/exam.vue'),
+      component: () => import('/@/views/demo/permission/Exam.vue'),
       meta: {
         title: '考试管理',
       },
@@ -40,7 +40,7 @@ const permission: AppRouteModule = {
     {
       path: 'class',
       name: 'Class',
-      component: () => import('/@/views/demo/permission/class.vue'),
+      component: () => import('/@/views/demo/permission/Class.vue'),
       meta: {
         title: '班级管理',
       },
@@ -48,7 +48,7 @@ const permission: AppRouteModule = {
     {
       path: 'message',
       name: 'Message',
-      component: () => import('/@/views/demo/permission/message.vue'),
+      component: () => import('/@/views/demo/permission/Message.vue'),
       meta: {
         title: '消息管理',
       },
