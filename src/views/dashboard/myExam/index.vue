@@ -44,7 +44,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive, onMounted, toRefs } from 'vue';
-import { createFakeUserList } from '/@/../mock/falseData.ts';
+// import { createFakeUserList } from '/@/../mock/falseData.ts';
 import { getExamList } from '/@/api/sys/user';
 
 import Answer from './Answer.vue';

@@ -24,11 +24,11 @@ jobs:
 
       # 安装依赖
       - name: 安装依赖
-        run: npm install
+        run: yarn
 
       # 打包
       - name: 打包
-        run: npm run build
+        run: yarn build
 
       # 上传阿里云
       - name: 发布到腾讯云
