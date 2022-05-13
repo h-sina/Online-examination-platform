@@ -1,35 +1,31 @@
 <template>
-  <!-- <PageWrapper :class="prefixCls" title="收藏">
-    <template #headerContent>
-      健康的身体是实现目标的基石。
-      <div :class="`${prefixCls}__link`"></div>
-  </template>-->
-  <div class="p-4" v-if="!data.detail">
-    <BasicTable @register="registerTable" :dataSource="data.colList" @change="pageChange">
-      <template #action="{ record, column }">
-        <TableAction :actions="createActions(record, column)" />
-      </template>
-    </BasicTable>
-  </div>
+  <div>
+    <div class="p-4" v-show="!data.detail">
+      <BasicTable @register="registerTable" :dataSource="data.colList" @change="pageChange">
+        <template #action="{ record, column }">
+          <TableAction :actions="createActions(record, column)" />
+        </template>
+      </BasicTable>
+    </div>
 
-  <CollapseContainer :title="'题目ID：' + `${data.quesDetail.id}`" v-show="data.detail">
-    <div class="m-15" style="font-size: 20px">{{ data.quesDetail.content }}</div>
-    <BasicForm
-      v-if="data.detail"
-      @register="register1"
-      @submit="handleSubmit"
-      @reset="handleReset"
-      :schemas="data.schemas"
-    />
-    <a-button @click="exit" class="m-5">退出训练</a-button>
-    <a-button @click="lookAnswer" class="m-5">查看答案</a-button>
-  </CollapseContainer>
-  <CollapseContainer title="题目答案" v-show="data.answerIf" :canExpan="false">
-    <h1 v-if="data.quesDetail.answer">答案：{{ data.quesDetail.answer }}</h1>
-    <h1 v-if="data.quesDetail.rightAnswer">答案：{{ data.quesDetail.rightAnswer }}</h1>
-    <h1 v-if="data.quesDetail.analysis">答案解析：{{ data.quesDetail.analysis }}</h1>
-  </CollapseContainer>
-  <!-- </PageWrapper> -->
+    <CollapseContainer :title="'题目ID：' + `${data.quesDetail.id}`" v-show="data.detail">
+      <div class="m-15" style="font-size: 20px">{{ data.quesDetail.content }}</div>
+      <BasicForm
+        v-show="data.detail"
+        @register="register1"
+        @submit="handleSubmit"
+        @reset="handleReset"
+        :schemas="data.schemas"
+      />
+      <a-button @click="exit" class="m-5">退出训练</a-button>
+      <a-button @click="lookAnswer" class="m-5">查看答案</a-button>
+    </CollapseContainer>
+    <CollapseContainer title="题目答案" v-show="data.answerIf" :canExpan="false">
+      <h1 v-show="data.quesDetail.answer">答案：{{ data.quesDetail.answer }}</h1>
+      <h1 v-show="data.quesDetail.rightAnswer">答案：{{ data.quesDetail.rightAnswer }}</h1>
+      <h1 v-show="data.quesDetail.analysis">答案解析：{{ data.quesDetail.analysis }}</h1>
+    </CollapseContainer>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref, reactive, computed } from 'vue';
@@ -254,7 +250,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      getCollections();
+      // getCollections();
     });
 
     function createActions(record: EditRecordRow, column: BasicColumn): ActionItem[] {
