@@ -41,7 +41,7 @@
 
           <a-form-item label="小题">
             <div
-              style="height: 200px; border: 1px solid black; border-radius: 5px; overflow: auto"
+              style="height: 500px; border: 1px solid black; border-radius: 5px; overflow: auto"
               class="m-5 p-5"
               ref="seeHeight"
             >
@@ -380,7 +380,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .demo-wrap {
-  width: 50%;
+  width: 90%;
   background-color: @component-background;
   border-radius: 10px;
 }

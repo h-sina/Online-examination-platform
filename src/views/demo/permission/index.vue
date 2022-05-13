@@ -1,13 +1,20 @@
 <template>
   <PageWrapper :class="prefixCls">
-    <BasicForm
+    <!-- <BasicForm
       @register="register"
       @submit="selectQuestions"
       @reset="resetQuestions"
       v-model="level"
+      
+    />-->
+    <BasicForm
+      @register="register"
+      v-model="level"
       v-if="data.detail"
+      style="margin: 10px"
+      @reset="resetQuestions"
     />
-    <a-button shape="round" @click="sortByTime" v-if="data.detail">点击按创建时间排序</a-button>
+    <!-- <a-button shape="round" @click="sortByTime" v-if="data.detail">点击按创建时间排序</a-button> -->
 
     <div class="p-4">
       <BasicTable
@@ -77,74 +84,7 @@ import { useUserStore } from '/@/store/modules/user';
 
 const userStore = useUserStore();
 const userinfo = computed(() => userStore.getUserInfo);
-const getSchamas = (): FormSchema[] => {
-  return [
-    {
-      field: 'level',
-      component: 'Select',
-      label: 'level',
-      colProps: {
-        span: 8,
-      },
-      componentProps: {
-        options: [
-          {
-            label: '简单',
-            value: '1',
-            key: '1',
-          },
-          {
-            label: '中等',
-            value: '2',
-            key: '2',
-          },
-          {
-            label: '困难',
-            value: '3',
-            key: '3',
-          },
-        ],
-      },
-    },
-    {
-      field: 'type',
-      component: 'Select',
-      label: 'type',
-      colProps: {
-        span: 8,
-      },
-      componentProps: {
-        options: [
-          {
-            label: '判断',
-            value: '1',
-            key: '1',
-          },
-          {
-            label: '单选',
-            value: '2',
-            key: '2',
-          },
-          {
-            label: '多选',
-            value: '3',
-            key: '3',
-          },
-          {
-            label: '填空',
-            value: '4',
-            key: '4',
-          },
-          {
-            label: '论述',
-            value: '5',
-            key: '5',
-          },
-        ],
-      },
-    },
-  ];
-};
+
 import { pd, dx, duox } from './choose';
 // const typeList = ['简单', '中等', '困难'];
 // const levelList = ['判断题', '单选题', '多选题', '填空题', '论述题'];
@@ -164,6 +104,83 @@ export default defineComponent({
   },
 
   setup() {
+    const getSchamas = (): FormSchema[] => {
+      return [
+        {
+          field: 'level',
+          component: 'Select',
+          label: '',
+          colProps: {
+            span: 3,
+          },
+
+          componentProps: {
+            placeholder: '难度',
+            options: [
+              {
+                label: '简单',
+                value: '1',
+                key: '1',
+              },
+              {
+                label: '中等',
+                value: '2',
+                key: '2',
+              },
+              {
+                label: '困难',
+                value: '3',
+                key: '3',
+              },
+            ],
+            onChange: (e: ChangeEvent) => {
+              selectQuestions(e, 'levelChange');
+            },
+          },
+        },
+        {
+          field: 'type',
+          component: 'Select',
+          label: '',
+          colProps: {
+            span: 3,
+          },
+          componentProps: {
+            placeholder: '类型',
+            onChange: (e: ChangeEvent) => {
+              selectQuestions(e, 'typeChange');
+            },
+            options: [
+              {
+                label: '判断',
+                value: '1',
+                key: '1',
+              },
+              {
+                label: '单选',
+                value: '2',
+                key: '2',
+              },
+              {
+                label: '多选',
+                value: '3',
+                key: '3',
+              },
+              {
+                label: '填空',
+                value: '4',
+                key: '4',
+              },
+              {
+                label: '论述',
+                value: '5',
+                key: '5',
+              },
+            ],
+          },
+        },
+      ];
+    };
     const currentEditKeyRef = ref('');
 
     // 选项注册
@@ -176,13 +193,14 @@ export default defineComponent({
 
     // 筛选表单配置
     const [register] = useForm({
-      labelWidth: 120,
+      labelWidth: 10,
       schemas: getSchamas(),
-      actionColOptions: {
-        span: 24,
-      },
-      compact: true,
-      showAdvancedButton: true,
+      showSubmitButton: false,
+      // actionColOptions: {
+      //   span: 24,
+      // },
+      // compact: true,
+      // showAdvancedButton: true,
       // submitFunc: getQuestions(),
     });
 
@@ -243,22 +261,25 @@ export default defineComponent({
     });
 
     // 点击筛选按钮
-    const selectQuestions = (values) => {
+    const selectQuestions = (values, type) => {
+      console.log(values);
+      console.log(type == 'typeChange');
+
       if (values) {
-        console.log(values);
-        data.formData = values;
-        if (data.formData.level != undefined) {
-          data.obj.level = +data.formData.level;
+        if (type == 'typeChange') {
+          data.obj.type = values;
+        } else {
+          data.obj.level = values;
+        }
+      } else {
+        if (type == 'typeChange') {
+          data.obj.type = 0;
         } else {
           data.obj.level = 0;
         }
-        if (data.formData.type != undefined) {
-          data.obj.type = +data.formData.type;
-        } else {
-          data.obj.type = 0;
-        }
-        getQuestions();
       }
+      console.log(data.obj);
+      getQuestions();
     };
 
     // 点击重置按钮
@@ -569,11 +590,11 @@ export default defineComponent({
         //   color: 'success',
         //   onClick: updateQuestionDetail.bind(null, record),
         // },
-        {
-          label: '编辑',
-          disabled: currentEditKeyRef.value ? currentEditKeyRef.value !== record.key : false,
-          onClick: handleEdit.bind(null, record),
-        },
+        // {
+        //   label: '编辑',
+        //   disabled: currentEditKeyRef.value ? currentEditKeyRef.value !== record.key : false,
+        //   onClick: handleEdit.bind(null, record),
+        // },
       ];
     }
 

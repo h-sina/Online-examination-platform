@@ -34,11 +34,7 @@
             </a-form-item>
             <a-form-item label="题目难度">
               <a-radio-group v-model:value="formF.level">
-                <a-radio :value="++index" name="level" v-for="(item, index) in levelList">
-                  {{
-                  item
-                  }}
-                </a-radio>
+                <a-radio :value="++index" name="level" v-for="(item, index) in levelList">{{ item }}</a-radio>
               </a-radio-group>
             </a-form-item>
 
@@ -54,11 +50,7 @@
 
             <a-form-item label="题目类型">
               <a-radio-group v-model:value="formF.type">
-                <a-radio :value="++index" name="type" v-for="(item, index) in typeList">
-                  {{
-                  item
-                  }}
-                </a-radio>
+                <a-radio :value="++index" name="type" v-for="(item, index) in typeList">{{ item }}</a-radio>
               </a-radio-group>
             </a-form-item>
 
@@ -423,7 +415,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .demo-wrap {
-  width: 50%;
+  width: 80%;
   background-color: @component-background;
   border-radius: 10px;
 }

@@ -16,21 +16,21 @@ export const settingList = [
     name: '基本设置',
     component: 'BaseSetting',
   },
-  {
-    key: '2',
-    name: '安全设置',
-    component: 'SecureSetting',
-  },
-  {
-    key: '3',
-    name: '账号绑定',
-    component: 'AccountBind',
-  },
-  {
-    key: '4',
-    name: '新消息通知',
-    component: 'MsgNotify',
-  },
+  // {
+  //   key: '2',
+  //   name: '安全设置',
+  //   component: 'SecureSetting',
+  // },
+  // {
+  //   key: '3',
+  //   name: '账号绑定',
+  //   component: 'AccountBind',
+  // },
+  // {
+  //   key: '4',
+  //   name: '新消息通知',
+  //   component: 'MsgNotify',
+  // },
 ];
 
 // 基础设置 form
