@@ -4,15 +4,10 @@ import { defHttp } from '/@/utils/http/axios';
 import {
   GetUserInfoModel,
   LoginParams,
-  LoginResultModel,
-} from './model/userModel';
 
 enum Api {
-  // Login = '/login',
   Login = '/user/login',
-  // Logout = '/logout',
   Logout = '/user/logout',
-  // GetUserInfo = '/getUserInfo',
   GetUserInfo = '/user/student/',
   GetPermCode = '/getPermCode',
   TestRetry = '/testRetry',
