@@ -13,22 +13,22 @@ const feat: AppRouteModule = {
   },
 
   children: [
-    {
-      path: 'student',
-      name: 'Student',
-      component: () => import('/@/views/demo/feat/Student.vue'),
-      meta: {
-        title: '学生管理',
-      },
-    },
-    {
-      path: 'teacher',
-      name: 'Teacher',
-      component: () => import('/@/views/demo/feat/Teacher.vue'),
-      meta: {
-        title: '教师管理',
-      },
-    },
+    // {
+    //   path: 'student',
+    //   name: 'Student',
+    //   component: () => import('/@/views/demo/feat/Student.vue'),
+    //   meta: {
+    //     title: '学生管理',
+    //   },
+    // },
+    // {
+    //   path: 'teacher',
+    //   name: 'Teacher',
+    //   component: () => import('/@/views/demo/feat/Teacher.vue'),
+    //   meta: {
+    //     title: '教师管理',
+    //   },
+    // },
     {
       path: 'knowledge',
       name: 'Knowledge',

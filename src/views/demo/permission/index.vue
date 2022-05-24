@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper :class="prefixCls">
+  <div>
     <!-- <BasicForm
       @register="register"
       @submit="selectQuestions"
@@ -19,7 +19,6 @@
     <div class="p-4">
       <BasicTable
         @register="registerTable"
-        @row-click="questionDetail"
         :dataSource="data.questionList"
         v-if="data.detail"
         @change="pageChange"
@@ -31,8 +30,15 @@
     </div>
 
     <CollapseContainer :title="'题目ID：' + `${data.quesDetail.id}`" v-if="!data.detail">
-      <div class="m-15">{{ data.quesDetail.content }}</div>
-      <ul class="m-15" v-for="i in data.quesDetail.selectionList" :key="data.quesDetail.id">
+      <a shape="round" @click="addErrK" class="m-2">
+        <PushpinTwoTone />添至错题
+      </a>
+      <a shape="round" @click="addCollK" class="m-2">
+        <HeartTwoTone />收藏本题
+      </a>
+
+      <div class="m-10">{{ data.quesDetail.content }}</div>
+      <ul class="m-5 ml-10" v-for="i in data.quesDetail.selectionList" :key="data.quesDetail.id">
         <li>{{ i }}</li>
       </ul>
       <BasicForm
@@ -43,18 +49,16 @@
         :schemas="data.schemas"
       />
       <a-button @click="exit" class="m-5">退出训练</a-button>
+      <a-button shape="round" @click="lastQues" class="m-5">上一个</a-button>
+      <a-button shape="round" @click="nextQues" class="m-5">下一个</a-button>
       <a-button @click="lookAnswer" class="m-5">查看答案</a-button>
-      <a-button @click="lastQues" class="m-5">上一个</a-button>
-      <a-button @click="nextQues" class="m-5">下一个</a-button>
-      <a-button @click="addErrK" class="m-5">添加到错题库</a-button>
-      <a-button @click="addCollK" class="m-5">添加到收藏夹</a-button>
     </CollapseContainer>
-    <CollapseContainer title="题目答案" v-if="data.answerIf" :canExpan="false">
+    <CollapseContainer title="题目答案" v-if="!data.detail && data.answerIf" :canExpan="false">
       <h1 v-if="data.quesDetail.answer">答案：{{ data.quesDetail.answer }}</h1>
       <h1 v-if="data.quesDetail.rightAnswer">答案：{{ data.quesDetail.rightAnswer }}</h1>
       <h1 v-if="data.quesDetail.analysis">答案解析：{{ data.quesDetail.analysis }}</h1>
     </CollapseContainer>
-  </PageWrapper>
+  </div>
 </template>
 <script lang="ts">
 import { CollapseContainer } from '/@/components/Container/index';
@@ -62,6 +66,7 @@ import { defineComponent, onMounted, reactive, toRefs, ref, computed } from 'vue
 import Icon from '/@/components/Icon/index';
 import { PageWrapper } from '/@/components/Page';
 import { Card, Row, Col, List } from 'ant-design-vue';
+import { PushpinTwoTone, HeartTwoTone } from '@ant-design/icons-vue';
 import { getQuestion, updateQuestionDetail } from '/@/api/question/question';
 import {
   BasicTable,
@@ -101,6 +106,8 @@ export default defineComponent({
     BasicForm,
     TableAction,
     CollapseContainer,
+    HeartTwoTone,
+    PushpinTwoTone,
   },
 
   setup() {
@@ -363,6 +370,7 @@ export default defineComponent({
     // 页面加载生命周期
     onMounted(() => {
       console.log('questionList-onmounted');
+      data.answerIf = false;
       getQuestions(data.obj);
     });
 
@@ -389,6 +397,7 @@ export default defineComponent({
     // 点击退出按钮
     const exit = () => {
       data.detail = true;
+      data.answerIf = false;
     };
 
     // 根据ID TYPE请求题目详情
@@ -410,7 +419,7 @@ export default defineComponent({
       try {
         data.questionList.some((item, index, list) => {
           if (item.id == data.detailId) {
-            if (index - 1 < 0) {
+            if (0 > index - 1) {
               notification.warning({
                 message: '这已经是第一题了',
                 duration: 3,

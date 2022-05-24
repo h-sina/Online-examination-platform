@@ -1,7 +1,4 @@
-<template>
-  <QrCode :value="qrCodeUrl" />
-  <QrCode :value="qrCodeUrl" :logo="LogoImg" />
-</template>
+<template></template>
 <script lang="ts">
 import { defineComponent, ref, unref } from 'vue';
 import { QrCode, QrCodeActionType } from '/@/components/Qrcode/index';

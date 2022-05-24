@@ -1,45 +1,47 @@
 <template>
-  <a-button shape="round" class="editable-add-btn m-5" @click="handleAdd">添加知识点</a-button>
-  <a-table bordered :data-source="knowledgePointList" :columns="columns" class="m-5">
-    <template
-      v-for="col in ['id', 'courseName', 'name', 'pointDescribe', 'superPointName']"
-      #[col]="{ text, record }"
-      :key="col"
-    >
-      <div>
-        <a-input
-          v-if="editableData[record.id]"
-          v-model:value="editableData[record.id][col]"
-          style="margin: -5px 0"
-        />
-        <template v-else>{{ text }}</template>
-      </div>
-    </template>
-
-    <template #operation="{ record }">
-      <a-popconfirm
-        v-if="knowledgePointList.length"
-        title="Sure to delete?"
-        @confirm="onDelete(record.id)"
+  <div>
+    <a-button shape="round" class="editable-add-btn m-5" @click="handleAdd">添加知识点</a-button>
+    <a-table bordered :data-source="knowledgePointList" :columns="columns" class="m-5">
+      <template
+        v-for="col in ['id', 'courseName', 'name', 'pointDescribe', 'superPointName']"
+        #[col]="{ text, record }"
+        :key="col"
       >
-        <a>删除</a>
-      </a-popconfirm>
-    </template>
+        <div>
+          <a-input
+            v-if="editableData[record.id]"
+            v-model:value="editableData[record.id][col]"
+            style="margin: -5px 0"
+          />
+          <template v-else>{{ text }}</template>
+        </div>
+      </template>
 
-    <template #operation1="{ record }">
-      <div class="editable-row-operations">
-        <span v-if="editableData[record.id]">
-          <a @click="save(record.id)">保存</a>
-          <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.id)">
-            <a>取消</a>
-          </a-popconfirm>
-        </span>
-        <span v-else>
-          <a @click="edit(record.id)">编辑</a>
-        </span>
-      </div>
-    </template>
-  </a-table>
+      <template #operation="{ record }">
+        <a-popconfirm
+          v-if="knowledgePointList.length"
+          title="Sure to delete?"
+          @confirm="onDelete(record.id)"
+        >
+          <a>删除</a>
+        </a-popconfirm>
+      </template>
+
+      <template #operation1="{ record }">
+        <div class="editable-row-operations">
+          <span v-if="editableData[record.id]">
+            <a @click="save(record.id)">保存</a>
+            <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.id)">
+              <a>取消</a>
+            </a-popconfirm>
+          </span>
+          <span v-else>
+            <a @click="edit(record.id)">编辑</a>
+          </span>
+        </div>
+      </template>
+    </a-table>
+  </div>
 </template>
 <script lang="ts">
 import {
