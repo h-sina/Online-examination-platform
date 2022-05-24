@@ -32,7 +32,7 @@ export function getExam(params) {
  */
 export function submitExam(examId, params) {
   return defHttp.post({
-    url: Api.GetExam + '/' + examId,
+    url: Api.SubmitExam + '/' + examId,
     params,
   });
 }

@@ -351,7 +351,7 @@ export default defineComponent({
             title={t('layout.setting.fullContent')}
             event={HandlerEnum.FULL_CONTENT}
             def={unref(getFullContent)}
-            disabled={!unref(getIsMixSidebar)}
+            // disabled={!unref(getIsMixSidebar)}
           />
 
           <SwitchItem

@@ -11,18 +11,18 @@
           <ArrowRightOutlined />
         </a-button>
         <a-button type="primary" @click="lookAll">预览全卷</a-button>
-        <a-button shape="round" type="primary" @click="submitExam">提交试卷</a-button>
-        <a-modal v-model:visible="visible" title="全卷预览" @ok="handleOk" v-for="i in list">
+        <a-button shape="round" type="primary" @click="submit">提交试卷</a-button>
+        <a-modal v-model:visible="visible" title="全卷预览" @ok="handleOk">
           <div v-for="i in list" style="margin: 10px">
             <div style="margin: 10px">
-              <a-button>{{ i.name }}</a-button>
+              <a>{{ i.name }}</a>
             </div>
 
-            <a-button v-for="(j, index) in i.quesList" style="margin: 10px">
-              {{
-              1 + index
-              }}
-            </a-button>
+            <a-button
+              v-for="(j, index) in i.quesList"
+              style="margin: 10px"
+              :type="finished(j.id)"
+            >{{ 1 + index }}</a-button>
           </div>
         </a-modal>
       </template>
@@ -46,38 +46,37 @@
           <Panduan
             :questionId="item.id"
             :typeId="listCurrent.type"
+            :value="getValue(item.id)"
             @score="computedScore"
-            v-show="listCurrent.type === 1"
+            v-if="listCurrent.type === 1"
           />
           <Danxuan
+            :select="item.selectionList"
             :questionId="item.id"
             :typeId="listCurrent.type"
+            :value="getValue(item.id)"
             @score="computedScore"
-            v-show="listCurrent.type === 2"
+            v-if="listCurrent.type === 2"
           />
           <Duoxuan
+            :select="item.selectionList"
             :questionId="item.id"
             :typeId="listCurrent.type"
+            :value="getValue(item.id)"
             @score="computedScore"
-            v-show="listCurrent.type === 3"
+            v-if="listCurrent.type === 3"
           />
           <Tiank
             :questionId="item.id"
             :typeId="listCurrent.type"
             @score="computedScore"
-            v-show="listCurrent.type === 4"
+            v-if="listCurrent.type === 4"
           />
           <Lunshu
             :questionId="item.id"
             :typeId="listCurrent.type"
             @score="computedScore"
-            v-show="listCurrent.type === 5"
-          />
-          <Lunshu
-            :questionId="item.id"
-            :typeId="listCurrent.type"
-            @score="computedScore"
-            v-show="listCurrent.type === 6"
+            v-if="listCurrent.type === 5"
           />
         </template>
       </a-list>
@@ -90,7 +89,7 @@ import { ArrowRightOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue';
 
 import { defineComponent, reactive, ref, onMounted, onUnmounted, toRefs, computed } from 'vue';
 
-import { getExam } from '/@/api/exam/exam';
+import { getExam, submitExam } from '/@/api/exam/exam';
 
 import Danxuan from './Danxuan.vue';
 import Panduan from './Panduan.vue';
@@ -130,17 +129,18 @@ export default defineComponent({
       type: 0,
       visible: false,
       score: 0,
-      examRe: [
-        {
-          bigQuesId: 0,
-          bigQuesOrderId: 0,
-          corrected: 0,
-          paperId: 0,
-          quesId: 0,
-          score: 0,
-          userAnswer: 'string',
-        },
-      ],
+      examRe: [],
+      examObj: {
+        bigQuesId: 0,
+        bigQuesOrderId: 0,
+        corrected: 0,
+        examId: 0,
+        quesId: 0,
+        score: 0,
+        userAnswer: '',
+        paperId: 0,
+      },
+      allNum: 0,
     });
     onMounted(() => {
       getExams();
@@ -157,22 +157,33 @@ export default defineComponent({
         data.description = res.data.description;
         data.id = res.data.id;
         data.name = res.data.name;
-        console.log(data.list);
+        data.list.forEach((i) => {
+          data.allNum += i.quesList.length;
+        });
+        chuli(res.data);
         currentBigQues(data.cur);
       }
-      console.log(res);
     }
+    const chuli = (res) => {
+      data.examObj.paperId = res.id;
+      data.examObj.examId = props.paperId;
+    };
     // 上一题操作
+    let timer;
     const last = () => {
-      console.log('last');
       if (data.cur > 0) {
-        currentBigQues();
         currentBigQues(--data.cur);
       } else {
-        notification.warning({
-          message: '已经是第一题了',
-          duration: 3,
-        });
+        if (!timer) {
+          notification.warning({
+            message: '已经是第一题了',
+            duration: 3,
+          });
+          timer = 1;
+          setTimeout(() => {
+            timer = null;
+          }, 2000);
+        }
       }
     };
     // 下一题操作
@@ -180,10 +191,16 @@ export default defineComponent({
       if (data.list.length - 1 > data.cur) {
         currentBigQues(++data.cur);
       } else {
-        notification.warning({
-          message: '已经是最后一题了',
-          duration: 3,
-        });
+        if (!timer) {
+          notification.warning({
+            message: '已经是最后一题了',
+            duration: 3,
+          });
+          timer = 1;
+          setTimeout(() => {
+            timer = null;
+          }, 2000);
+        }
       }
     };
     // 当前页面呈现的大题
@@ -198,24 +215,97 @@ export default defineComponent({
     const oneScore = computed(() => data.listCurrent.totalScore / data.listCurrent.quesList.length);
     const m = new Map();
     // 每题改变计算触发计算分值
-    const computedScore = (answer, id) => {
+    const computedScore = (answer, id, answerRe, corrected) => {
+      console.log(answer, id, answerRe);
       if (answer) {
         data.score += oneScore.value;
         m.set(id, 1);
       } else {
         if (m.has(id)) data.score -= oneScore.value;
       }
-      console.log(data.score);
+      if (data.examRe.length !== 0) {
+        let f = 0;
+        // data.examRe.forEach((i) => {
+        //   if (i.quesId === id) {
+        //     i.score = data.score;
+        //     i.userAnswer = data.answerRe;
+        //     f = 1;
+        //     return;
+        //   }
+        // });
+        for (let i = 0; i < data.examRe.length; i++) {
+          if (data.examRe[i].quesId === id) {
+            data.examRe[i].score = data.score;
+            data.examRe[i].userAnswer = answerRe;
+            f = 1;
+            return;
+          }
+        }
+        if (f == 0) {
+          let obj = JSON.parse(JSON.stringify(data.examObj));
+          obj.score = data.score;
+          obj.userAnswer = answerRe;
+          obj.corrected = corrected;
+          obj.bigQuesOrderId = data.listCurrent.orderId;
+          obj.bigQuesId = data.listCurrent.id;
+          obj.quesId = id;
+          data.examRe.push(obj);
+        }
+      } else {
+        let obj = JSON.parse(JSON.stringify(data.examObj));
+        obj.score = data.score;
+        obj.userAnswer = answerRe;
+        obj.corrected = corrected;
+        obj.bigQuesOrderId = data.listCurrent.orderId;
+        obj.bigQuesId = data.listCurrent.id;
+        obj.quesId = id;
+        data.examRe.push(obj);
+      }
+      console.log(data.examRe);
     };
+
     // 全卷预览的OK按钮 - 提交试卷
     const handleOk = () => {
       lookAll();
-      console.log('ok');
     };
     // 提交试卷
-    const submitExam = () => {
-      console.log('submit paper');
-      actions.emit('subExam');
+    const submit = () => {
+      if (data.examRe.length !== data.allNum) {
+        notification.warning({
+          message: '答题未全部完成！',
+          duration: 3,
+        });
+        return;
+      }
+      subExam();
+      // console.log('submit paper');
+      // actions.emit('subExam');
+    };
+    async function subExam() {
+      let res = await submitExam(props.paperId, data.examRe);
+      console.log(res);
+    }
+    const getValue = (id) => {
+      for (let i in data.examRe) {
+        if (data.examRe[i].quesId === id) {
+          console.log(data.examRe[i].userAnswer);
+          return data.examRe[i].userAnswer;
+        }
+      }
+    };
+
+    const finished = (id) => {
+      // data.examRe.forEach((i) => {
+      //   console.log(i);
+      //   if (i.quesId === id) {
+      //     return 'primary';
+      //   }
+      // });
+      for (let i = 0; i < data.examRe.length; i++) {
+        if (data.examRe[i].quesId === id) {
+          return 'primary';
+        }
+      }
     };
     return {
       ...toRefs(data),
@@ -227,7 +317,10 @@ export default defineComponent({
       lookAll,
       computedScore,
       handleOk,
-      submitExam,
+      submit,
+      getValue,
+
+      finished,
     };
   },
 });

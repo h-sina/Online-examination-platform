@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue';
+import { reactive, toRefs, onMounted } from 'vue';
 import { getQuestionDetail } from '/@/api/question/question';
 export default {
   props: {
@@ -18,11 +18,19 @@ export default {
       type: Number,
       required: true,
     },
+    value: {
+      type: String,
+      required: true,
+    },
   },
   emits: ['score'],
   setup (props, actions) {
+    onMounted(() => {
+      console.log(props.value);
+      data.answer = props.value;
+    });
     const data = reactive({
-      answer: -1,
+      answer: props.value,
     });
     const submit = () => {
       getdetail(props.questionId, props.typeId);
@@ -30,7 +38,7 @@ export default {
     async function getdetail (id, type) {
       let res = await getQuestionDetail(id, type);
       if (res.code == 'ITEST-200') {
-        actions.emit('score', res.data.answer == data.answer, id);
+        actions.emit('score', res.data.answer == data.answer, id, data.answer, 1);
       } else {
       }
     }

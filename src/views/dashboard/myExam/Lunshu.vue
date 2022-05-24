@@ -19,17 +19,18 @@ export default {
   emits: ['score'],
   setup (props, actions) {
     const data = reactive({
-      answer: -1,
+      answer: '',
     });
     const submit = () => {
       getdetail(props.questionId, props.typeId);
     };
     async function getdetail (id, type) {
-      let res = await getQuestionDetail(id, type);
-      if (res.code == 'ITEST-200') {
-        // actions.emit('score', res.data.answer == data.answer, id);
-      } else {
-      }
+      // let res = await getQuestionDetail(id, type);
+      // if (res.code == 'ITEST-200') {
+      //   // actions.emit('score', res.data.answer == data.answer, id);
+      // } else {
+      // }
+      actions.emit('score', '主观题', id, data.answer, 0);
     }
     return {
       ...toRefs(data),

@@ -92,7 +92,7 @@ export default defineComponent({
       console.log(data.examList);
     }
     const enterExam = (id) => {
-      console.log(id);
+      data.paperId = id;
       // 显示加载loading
       EnterExamLoading.value = true;
 
@@ -100,11 +100,9 @@ export default defineComponent({
       activeKey.value = '2';
       //
       data.disabledCenter = true;
-      console.log(activeKey.value);
       // 跳转tab
 
       // 全屏显示
-      console.log(HandlerEnum.FULL_CONTENT);
       baseHandler(HandlerEnum.FULL_CONTENT, true);
     };
     const submitExam = () => {
