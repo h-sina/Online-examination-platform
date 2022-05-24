@@ -51,7 +51,8 @@ import Answer from './Answer.vue';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 const { notification } = useMessage();
-
+import { baseHandler } from '/@/layouts/default/setting/handler';
+import { HandlerEnum } from '/@/layouts/default/setting/enum';
 export default defineComponent({
   components: { Answer },
   setup() {
@@ -88,6 +89,10 @@ export default defineComponent({
       data.disabledCenter = true;
       console.log(activeKey.value);
       // 跳转tab
+
+      // 全屏显示
+      console.log(HandlerEnum.FULL_CONTENT);
+      baseHandler(HandlerEnum.FULL_CONTENT, true);
     };
     const submitExam = () => {
       data.disabledCenter = false;
@@ -97,6 +102,7 @@ export default defineComponent({
         message: '提交试卷成功！',
         duration: 3,
       });
+      baseHandler(HandlerEnum.FULL_CONTENT, false);
     };
     return {
       loading,

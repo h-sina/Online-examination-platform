@@ -1,43 +1,46 @@
-import { defineComponent, computed, unref } from 'vue';
-import { BasicDrawer } from '/@/components/Drawer/index';
-import { Divider } from 'ant-design-vue';
 import {
-  TypePicker,
-  ThemeColorPicker,
-  SettingFooter,
-  SwitchItem,
-  SelectItem,
-  InputNumberItem,
-} from './components';
+  computed,
+  defineComponent,
+  unref,
+} from 'vue';
 
 import { AppDarkModeToggle } from '/@/components/Application';
-
-import { MenuTypeEnum, TriggerEnum } from '/@/enums/menuEnum';
-
-import { useRootSetting } from '/@/hooks/setting/useRootSetting';
-import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
+import { BasicDrawer } from '/@/components/Drawer/index';
+import {
+  MenuTypeEnum,
+  TriggerEnum,
+} from '/@/enums/menuEnum';
 import { useHeaderSetting } from '/@/hooks/setting/useHeaderSetting';
+import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
 import { useMultipleTabSetting } from '/@/hooks/setting/useMultipleTabSetting';
+import { useRootSetting } from '/@/hooks/setting/useRootSetting';
 import { useTransitionSetting } from '/@/hooks/setting/useTransitionSetting';
 import { useI18n } from '/@/hooks/web/useI18n';
-
-import { baseHandler } from './handler';
-
 import {
-  HandlerEnum,
-  contentModeOptions,
-  topMenuAlignOptions,
-  getMenuTriggerOptions,
-  routerTransitionOptions,
-  menuTypeList,
-  mixSidebarTriggerOptions,
-} from './enum';
-
-import {
+  APP_PRESET_COLOR_LIST,
   HEADER_PRESET_BG_COLOR_LIST,
   SIDE_BAR_BG_COLOR_LIST,
-  APP_PRESET_COLOR_LIST,
 } from '/@/settings/designSetting';
+import { Divider } from 'ant-design-vue';
+
+import {
+  InputNumberItem,
+  SelectItem,
+  SettingFooter,
+  SwitchItem,
+  ThemeColorPicker,
+  TypePicker,
+} from './components';
+import {
+  contentModeOptions,
+  getMenuTriggerOptions,
+  HandlerEnum,
+  menuTypeList,
+  mixSidebarTriggerOptions,
+  routerTransitionOptions,
+  topMenuAlignOptions,
+} from './enum';
+import { baseHandler } from './handler';
 
 const { t } = useI18n();
 
@@ -348,6 +351,7 @@ export default defineComponent({
             title={t('layout.setting.fullContent')}
             event={HandlerEnum.FULL_CONTENT}
             def={unref(getFullContent)}
+            disabled={!unref(getIsMixSidebar)}
           />
 
           <SwitchItem

@@ -3,6 +3,10 @@ import { defHttp } from '/@/utils/http/axios';
 enum Api {
   GetExam = '/exam/paper/get',
   GetExams = '/user/my-exam',
+  SubmitExam = '/exam/solution/add',
+  GetExamByPaperIdAndStuId = '/exam/correct/list',
+  SubmitExamByPaperIdAndStuId = '/exam/correct/score',
+  DelExam = '/exam/paper/delete',
 }
 
 /**
@@ -20,5 +24,42 @@ export function getExams() {
 export function getExam(params) {
   return defHttp.get({
     url: Api.GetExam + '/' + params,
+  });
+}
+
+/**
+ * @description: 提交试卷
+ */
+export function submitExam(examId) {
+  return defHttp.post({
+    url: Api.GetExam + '/' + examId,
+  });
+}
+
+/**
+ * @description: 获取试卷
+ */
+export function getExamByPaperIdAndStuId(examId, stuId) {
+  return defHttp.get({
+    url: Api.GetExamByPaperIdAndStuId + '/' + examId + '/' + stuId,
+  });
+}
+
+/**
+ * @description: 提交阅卷
+ */
+export function submitExamByPaperIdAndStuId(examId, stuId) {
+  return defHttp.post({
+    url: Api.SubmitExamByPaperIdAndStuId + '/' + stuId + '/' + examId,
+  });
+}
+
+/**
+ * @description: 删除试卷
+ */
+export function delExam(params) {
+  return defHttp.post({
+    url: Api.DelExam,
+    params,
   });
 }
