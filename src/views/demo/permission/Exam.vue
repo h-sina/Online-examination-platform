@@ -45,7 +45,7 @@
               class="m-5 p-5"
               ref="seeHeight"
             >
-              <a-checkbox-group v-model:value="quesTempList">
+              <a-checkbox-group v-model:value="quesTempList" @change="cc">
                 <a-checkbox type="checkbox" :value="item.id" v-for="item in list" style="margin: 0">
                   <a-card style="width: 300px; margin-top: 5px">
                     {{ item.title }}-{{ item.knowledgeName }}-{{ item.level }}-{{
@@ -87,6 +87,9 @@ export default defineComponent({
   components: { CheckCircleTwoTone },
 
   setup() {
+    const cc = () => {
+      console.log(data.quesTempList);
+    };
     const seeHeight = ref(null);
     const data = reactive({
       permissionList: ['仅自己可见', '公开'],
@@ -95,35 +98,18 @@ export default defineComponent({
       showS: false,
       showE: false,
       currentStep: 0,
-      // formF: {
-      //   description: '试卷描述',
-      //   name: '试卷名',
-      //   permission: -1,
-      // },
+      paperId: 0,
       formF: {
         description: '',
         name: '',
         permission: -1,
       },
-      // formFC: {
-      //   description: '',
-      //   name: '',
-      //   permission: -1,
-      // },
       quesTempList: [],
       quesItem: {
         orderId: 1,
         questionId: 0,
         score: 0,
       },
-      // formS: {
-      //   name: 'string',
-      //   orderId: 1,
-      //   paperId: 0,
-      //   quesTempList: [],
-      //   totalScore: 0,
-      //   type: 1,
-      // },
       formS: {
         name: '',
         orderId: 1,
@@ -132,14 +118,6 @@ export default defineComponent({
         totalScore: 0,
         type: 1,
       },
-      // formSC: {
-      //   name: '',
-      //   orderId: 1,
-      //   paperId: 0,
-      //   quesTempList: [],
-      //   totalScore: 0,
-      //   type: 1,
-      // },
       obj: {
         orderRule: 0,
         pageNum: 1,
@@ -166,15 +144,17 @@ export default defineComponent({
       console.log('继续添加大题');
       // 处理小题连续添加的ID 并组合到formS
       data.quesTempList.forEach((i, index) => {
-        let item = data.quesItem;
+        let item = JSON.parse(JSON.stringify(data.quesItem));
         item.orderId = index + 1;
         item.questionId = i;
         item.score = 10;
         data.formS.quesTempList.push(item);
       });
+      let t = data.formS;
+      console.log(t);
       // 添加大题
-      const res = await addPaperS(data.formS);
-      responseMsg(res);
+      // const res = await addPaperS(data.formS);
+      // responseMsg(res);
       // 清除第二步表格并对大题ID加1
       let orderId = data.formS.orderId;
       clearFormS();
@@ -222,6 +202,7 @@ export default defineComponent({
         let res = await addPaperF(data.formF);
         // 获取试卷ID
         data.formS.paperId = res.data;
+        data.paperId = res.data;
         // 处理反馈
         responseMsg(res);
         // 变换表格
@@ -333,7 +314,8 @@ export default defineComponent({
     function clearFormS() {
       // data.formS = JSON.parse(JSON.stringify(data.formSC));
       data.quesTempList = [];
-      clearForm(data.formS, { orderId: 1, type: 1 });
+      clearForm(data.formS, { orderId: 1, type: 1, paperId: data.paperId });
+      // data.formS.paperId = data.paperId;
     }
 
     function clearForm(data, obj) {
@@ -344,6 +326,9 @@ export default defineComponent({
             break;
           case 'number':
             data[i] = 0;
+            break;
+          case 'object':
+            data[i] = [];
             break;
         }
       });
@@ -373,6 +358,7 @@ export default defineComponent({
       showformE,
 
       againPaper,
+      cc,
     };
   },
 });
