@@ -45,7 +45,7 @@
               class="m-5 p-5"
               ref="seeHeight"
             >
-              <a-checkbox-group v-model:value="quesTempList" @change="cc">
+              <a-checkbox-group v-model:value="quesTempList">
                 <a-checkbox type="checkbox" :value="item.id" v-for="item in list" style="margin: 0">
                   <a-card style="width: 300px; margin-top: 5px">
                     {{ item.title }}-{{ item.knowledgeName }}-{{ item.level }}-{{
@@ -87,9 +87,6 @@ export default defineComponent({
   components: { CheckCircleTwoTone },
 
   setup() {
-    const cc = () => {
-      console.log(data.quesTempList);
-    };
     const seeHeight = ref(null);
     const data = reactive({
       permissionList: ['仅自己可见', '公开'],
@@ -139,9 +136,7 @@ export default defineComponent({
       showformF(true);
     }
 
-    // 处理连续添加大题
-    async function submitSS() {
-      console.log('继续添加大题');
+    async function chuli() {
       // 处理小题连续添加的ID 并组合到formS
       data.quesTempList.forEach((i, index) => {
         let item = JSON.parse(JSON.stringify(data.quesItem));
@@ -150,11 +145,25 @@ export default defineComponent({
         item.score = 10;
         data.formS.quesTempList.push(item);
       });
-      let t = data.formS;
-      console.log(t);
       // 添加大题
-      // const res = await addPaperS(data.formS);
-      // responseMsg(res);
+      const res = await addPaperS(data.formS);
+      responseMsg(res);
+    }
+    const pank = () => {
+      let re = data.formS.name && data.formS.quesTempList && data.formS.totalScore;
+      if (!re) {
+        notification.error({
+          message: '字段不能为空',
+          duration: 3,
+        });
+      }
+      return re;
+    };
+    // 处理连续添加大题
+    async function submitSS() {
+      console.log('继续添加大题');
+      if (!pank()) return;
+      chuli();
       // 清除第二步表格并对大题ID加1
       let orderId = data.formS.orderId;
       clearFormS();
@@ -164,24 +173,13 @@ export default defineComponent({
     // 处理添加最后一道大题
     async function submitS() {
       console.log('创建试卷第二步前');
-      // 处理多选框数据
-      data.quesTempList.forEach((i, index) => {
-        let item = data.quesItem;
-        item.orderId = index + 1;
-        item.questionId = i;
-        item.score = 10;
-        data.formS.quesTempList.push(item);
-      });
-      // 调用接口
-      const res = await addPaperS(data.formS);
+      if (!pank()) return;
+      chuli();
       // 清空表单
       clearFormS();
       // 最后一步
       showformS(false);
       showformE(true);
-
-      // 处理反馈
-      responseMsg(res);
     }
 
     // 组卷第一步
@@ -289,6 +287,7 @@ export default defineComponent({
     // 类型改变 初始化一页的数据并调用接口方法
     function changeList() {
       data.obj.pageSize = 10;
+      data.quesTempList = [];
       getQuestionList();
     }
 
@@ -358,7 +357,6 @@ export default defineComponent({
       showformE,
 
       againPaper,
-      cc,
     };
   },
 });
