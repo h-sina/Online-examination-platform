@@ -1,4 +1,5 @@
 interface GroupItem {
+  id: number;
   title: string;
   icon: string;
   color: string;
@@ -106,6 +107,7 @@ export const dynamicInfoItems: DynamicInfoItem[] = [
 
 export const groupItems: GroupItem[] = [
   {
+    id: 1,
     title: '个人详细信息',
     icon: 'noto:woman-student-medium-light-skin-tone',
     color: '',
@@ -114,6 +116,7 @@ export const groupItems: GroupItem[] = [
     date: '2021-04-01',
   },
   {
+    id: 2,
     title: '班级管理',
     icon: 'carbon:data-class',
     color: '#3fb27f',
@@ -122,6 +125,7 @@ export const groupItems: GroupItem[] = [
     date: '2021-04-01',
   },
   {
+    id: 3,
     title: '错题管理',
     icon: 'map:climbing',
     color: '#e18525',
@@ -130,6 +134,7 @@ export const groupItems: GroupItem[] = [
     date: '2021-04-01',
   },
   {
+    id: 4,
     title: '题库训练',
     icon: 'map:archery',
     color: '#bf0c2c',
@@ -138,6 +143,7 @@ export const groupItems: GroupItem[] = [
     date: '2021-04-01',
   },
   {
+    id: 5,
     title: '收藏管理',
     icon: 'ep:collection',
     color: '#00d8ff',
@@ -146,6 +152,7 @@ export const groupItems: GroupItem[] = [
     date: '2021-04-01',
   },
   {
+    id: 6,
     title: '我的考试',
     icon: 'map:baseball',
     color: '#4daf1bc9',

@@ -28,6 +28,7 @@
             >进入考试</a-button>
           </a-card>
         </a-row>
+        <a-empty v-show="!examList" />
       </a-tab-pane>
       <a-tab-pane key="2" :disabled="disabledExam">
         <template #tab>
@@ -53,6 +54,7 @@ import { useMessage } from '/@/hooks/web/useMessage';
 const { notification } = useMessage();
 import { baseHandler } from '/@/layouts/default/setting/handler';
 import { HandlerEnum } from '/@/layouts/default/setting/enum';
+import { submitExam } from '/@/api/exam/exam';
 export default defineComponent({
   components: { Answer },
   setup() {
@@ -64,19 +66,30 @@ export default defineComponent({
       disabledCenter: false,
       disabledExam: true,
       paperId: 0,
+      answers: [
+        {
+          bigQuesId: 0,
+          bigQuesOrderId: 0,
+          corrected: 0,
+          examId: 0,
+          paperId: 0,
+          quesId: 0,
+          score: 0,
+          userAnswer: 'string',
+        },
+      ],
     });
     onMounted(() => {
       // data.examList = getExamList();
       // 加载试卷列表
       getExamsList();
       loading.value = false;
-      // console.log(data.list);
     });
 
     async function getExamsList() {
       let res = await getExamList();
       data.examList = res.data;
-      console.log(res);
+      console.log(data.examList);
     }
     const enterExam = (id) => {
       console.log(id);
@@ -98,12 +111,25 @@ export default defineComponent({
       data.disabledCenter = false;
       data.disabledExam = true;
       activeKey.value = '1';
-      notification.success({
-        message: '提交试卷成功！',
-        duration: 3,
-      });
+
       baseHandler(HandlerEnum.FULL_CONTENT, false);
+      try {
+        // handleExam();
+        notification.success({
+          message: '提交试卷成功！',
+          duration: 3,
+        });
+      } catch (e) {
+        notification.error({
+          message: e,
+          duration: 3,
+        });
+      }
     };
+    async function handleExam() {
+      let res = await submitExam(data.paperId, data.answers);
+      console.log(res);
+    }
     return {
       loading,
       EnterExamLoading,

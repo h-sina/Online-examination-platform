@@ -30,9 +30,10 @@ export function getExam(params) {
 /**
  * @description: 提交试卷
  */
-export function submitExam(examId) {
+export function submitExam(examId, params) {
   return defHttp.post({
     url: Api.GetExam + '/' + examId,
+    params,
   });
 }
 
