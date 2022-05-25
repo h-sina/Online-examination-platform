@@ -112,18 +112,18 @@ export default defineComponent({
       activeKey.value = '1';
 
       baseHandler(HandlerEnum.FULL_CONTENT, false);
-      try {
-        // handleExam();
-        notification.success({
-          message: '提交试卷成功！',
-          duration: 3,
-        });
-      } catch (e) {
-        notification.error({
-          message: e,
-          duration: 3,
-        });
-      }
+      // try {
+      //   // handleExam();
+      //   notification.success({
+      //     message: '提交试卷成功！',
+      //     duration: 3,
+      //   });
+      // } catch (e) {
+      //   notification.error({
+      //     message: e,
+      //     duration: 3,
+      //   });
+      // }
     };
     async function handleExam() {
       let res = await submitExam(data.paperId, data.answers);

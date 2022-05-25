@@ -40,7 +40,7 @@
         <template #renderItem="{ item, index }">
           <a-list-item>
             <a-list-item-meta>
-              <template #avatar>{{ ++index }}.</template>
+              <template #avatar>{{ 1 + index }}.</template>
               <template #title>{{ item.content }}</template>
             </a-list-item-meta>
           </a-list-item>
@@ -274,15 +274,16 @@ export default defineComponent({
       subExam();
     };
     async function subExam() {
+      console.log(data.examRe);
       let res = await submitExam(props.paperId, data.examRe);
       if (res.code == 'ITEST-200') {
-        notification.warning({
+        notification.success({
           message: '提交试卷成功',
           duration: 3,
         });
         actions.emit('subExam');
       } else {
-        notification.warning({
+        notification.error({
           message: '出错啦，请联系管理员',
           duration: 3,
         });
@@ -312,7 +313,8 @@ export default defineComponent({
     const jump = (id) => {
       data.visible = !data.visible;
       data.loading = true;
-      currentBigQues(id - 1);
+      data.cur = id - 1;
+      currentBigQues(data.cur);
     };
     return {
       ...toRefs(data),
