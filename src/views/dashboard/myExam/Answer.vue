@@ -230,8 +230,13 @@ export default defineComponent({
         let f = 0;
         for (let i = 0; i < data.examRe.length; i++) {
           if (data.examRe[i].quesId === id) {
-            data.examRe[i].score = data.score;
-            data.examRe[i].userAnswer = answerRe;
+            if (answerRe == '') {
+              console.log('null-qudiao');
+              data.examRe.splice(i, 1);
+            } else {
+              data.examRe[i].score = data.score;
+              data.examRe[i].userAnswer = answerRe;
+            }
             f = 1;
             return;
           }
