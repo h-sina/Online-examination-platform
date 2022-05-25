@@ -22,6 +22,7 @@
               v-for="(j, index) in i.quesList"
               style="margin: 10px"
               :type="finished(j.id)"
+              @click="jump(i.orderId)"
             >{{ 1 + index }}</a-button>
           </div>
         </a-modal>
@@ -308,6 +309,11 @@ export default defineComponent({
         }
       }
     };
+    const jump = (id) => {
+      data.visible = !data.visible;
+      data.loading = true;
+      currentBigQues(id - 1);
+    };
     return {
       ...toRefs(data),
       oneScore,
@@ -322,6 +328,7 @@ export default defineComponent({
       getValue,
 
       finished,
+      jump,
     };
   },
 });
