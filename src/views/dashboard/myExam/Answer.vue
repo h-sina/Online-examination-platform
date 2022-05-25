@@ -35,7 +35,7 @@
       <!-- 大题类型 -->
 
       <!-- 答题区域 -->
-      <a-list item-layout="horizontal" :data-source="listCurrent.quesList">
+      <a-list item-layout="horizontal" :data-source="listCurrent.quesList" :loading="loading">
         <template #renderItem="{ item, index }">
           <a-list-item>
             <a-list-item-meta>
@@ -69,12 +69,14 @@
           <Tiank
             :questionId="item.id"
             :typeId="listCurrent.type"
+            :value="getValue(item.id)"
             @score="computedScore"
             v-if="listCurrent.type === 4"
           />
           <Lunshu
             :questionId="item.id"
             :typeId="listCurrent.type"
+            :value="getValue(item.id)"
             @score="computedScore"
             v-if="listCurrent.type === 5"
           />
@@ -141,6 +143,7 @@ export default defineComponent({
         paperId: 0,
       },
       allNum: 0,
+      loading: true,
     });
     onMounted(() => {
       getExams();
@@ -149,7 +152,6 @@ export default defineComponent({
     async function getExams() {
       // props.paperId
       let res = await getExam(props.paperId);
-      console.log(res);
 
       if (res.code === 'ITEST-200') {
         data.list = res.data.bigQuesVoList;
@@ -206,6 +208,7 @@ export default defineComponent({
     // 当前页面呈现的大题
     const currentBigQues = (id) => {
       data.listCurrent = data.list[id];
+      data.loading = false;
     };
     // 全卷预览的显示
     const lookAll = () => {
@@ -216,7 +219,6 @@ export default defineComponent({
     const m = new Map();
     // 每题改变计算触发计算分值
     const computedScore = (answer, id, answerRe, corrected) => {
-      console.log(answer, id, answerRe);
       if (answer) {
         data.score += oneScore.value;
         m.set(id, 1);
@@ -225,14 +227,6 @@ export default defineComponent({
       }
       if (data.examRe.length !== 0) {
         let f = 0;
-        // data.examRe.forEach((i) => {
-        //   if (i.quesId === id) {
-        //     i.score = data.score;
-        //     i.userAnswer = data.answerRe;
-        //     f = 1;
-        //     return;
-        //   }
-        // });
         for (let i = 0; i < data.examRe.length; i++) {
           if (data.examRe[i].quesId === id) {
             data.examRe[i].score = data.score;
@@ -261,7 +255,6 @@ export default defineComponent({
         obj.quesId = id;
         data.examRe.push(obj);
       }
-      console.log(data.examRe);
     };
 
     // 全卷预览的OK按钮 - 提交试卷
@@ -278,17 +271,25 @@ export default defineComponent({
         return;
       }
       subExam();
-      // console.log('submit paper');
-      // actions.emit('subExam');
     };
     async function subExam() {
       let res = await submitExam(props.paperId, data.examRe);
-      console.log(res);
+      if (res.code == 'ITEST-200') {
+        notification.warning({
+          message: '提交试卷成功',
+          duration: 3,
+        });
+        actions.emit('subExam');
+      } else {
+        notification.warning({
+          message: '出错啦，请联系管理员',
+          duration: 3,
+        });
+      }
     }
     const getValue = (id) => {
       for (let i in data.examRe) {
         if (data.examRe[i].quesId === id) {
-          console.log(data.examRe[i].userAnswer);
           return data.examRe[i].userAnswer;
         }
       }

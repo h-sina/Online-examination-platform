@@ -41,7 +41,6 @@ export default {
       select: [],
     });
     const submit = () => {
-      console.log(data.answer);
       getdetail(props.questionId, props.typeId);
     };
     async function getdetail (id, type) {

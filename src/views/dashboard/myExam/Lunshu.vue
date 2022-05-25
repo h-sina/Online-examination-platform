@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue';
+import { reactive, toRefs, onMounted } from 'vue';
 import { getQuestionDetail } from '/@/api/question/question';
 export default {
   props: {
@@ -15,9 +15,16 @@ export default {
       type: Number,
       required: true,
     },
+    value: {
+      type: String,
+      required: true,
+    },
   },
   emits: ['score'],
   setup (props, actions) {
+    onMounted(() => {
+      data.answer = props.value;
+    });
     const data = reactive({
       answer: '',
     });

@@ -26,7 +26,6 @@ export default {
   emits: ['score'],
   setup (props, actions) {
     onMounted(() => {
-      console.log(props.value);
       data.answer = props.value;
     });
     const data = reactive({

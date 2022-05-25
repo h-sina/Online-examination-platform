@@ -63,6 +63,8 @@ export default defineComponent({
     const activeKey = ref('1');
     const data = reactive({
       examList: [],
+      // empty: false,
+      // loading: false,
       disabledCenter: false,
       disabledExam: true,
       paperId: 0,
@@ -89,7 +91,6 @@ export default defineComponent({
     async function getExamsList() {
       let res = await getExamList();
       data.examList = res.data;
-      console.log(data.examList);
     }
     const enterExam = (id) => {
       data.paperId = id;
