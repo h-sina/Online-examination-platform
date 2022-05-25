@@ -53,6 +53,14 @@ const permission: AppRouteModule = {
         title: '消息管理',
       },
     },
+    {
+      path: 'markPaper',
+      name: 'MarkPaper',
+      component: () => import('/@/views/demo/permission/MarkPaper.vue'),
+      meta: {
+        title: '批卷管理',
+      },
+    },
 
     // {
     //   path: 'front',

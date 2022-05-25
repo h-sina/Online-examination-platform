@@ -7,6 +7,11 @@ enum Api {
   GetExamByPaperIdAndStuId = '/exam/correct/list',
   SubmitExamByPaperIdAndStuId = '/exam/correct/score',
   DelExam = '/exam/paper/delete',
+  GetExamsByClassId = '/user/teacher/exam-list',
+
+  GetExamsByTeacher = '/clazz/tea/list',
+  GetExamByTeacher = '/clazz/my-exam',
+  GetStuByTeacher = '/clazz/stu-list',
 }
 
 /**
@@ -49,9 +54,10 @@ export function getExamByPaperIdAndStuId(examId, stuId) {
 /**
  * @description: 提交阅卷
  */
-export function submitExamByPaperIdAndStuId(examId, stuId) {
+export function submitExamByPaperIdAndStuId(examId, stuId, params) {
   return defHttp.post({
     url: Api.SubmitExamByPaperIdAndStuId + '/' + stuId + '/' + examId,
+    params,
   });
 }
 
@@ -62,5 +68,41 @@ export function delExam(params) {
   return defHttp.post({
     url: Api.DelExam,
     params,
+  });
+}
+
+/**
+ * @description: 获取待批改试卷S
+ */
+export function getExamsByClassId(classId) {
+  return defHttp.get({
+    url: Api.GetExamsByClassId + '/' + classId,
+  });
+}
+
+/**
+ * @description: 老师阅卷 所有班级（课程）页面
+ */
+export function getExamsByTeacher() {
+  return defHttp.get({
+    url: Api.GetExamsByTeacher,
+  });
+}
+
+/**
+ * @description: 老师进入 某班级（课程）阅卷页面
+ */
+export function getExamByTeacher(params) {
+  return defHttp.get({
+    url: Api.GetExamByTeacher + '/' + params,
+  });
+}
+
+/**
+ * @description: 老师进入 某次考试阅卷页面
+ */
+export function GetStuByTeacher(params) {
+  return defHttp.get({
+    url: Api.GetStuByTeacher + '/' + params,
   });
 }
