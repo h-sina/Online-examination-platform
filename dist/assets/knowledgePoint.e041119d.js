@@ -1,1 +1,0 @@
-import{a2 as t}from"./index.dd87d40a.js";function o(e){return t.get({url:"/question/knowledge/select/kpname/"+e})}function d(e){return t.post({url:"/question/knowledge/list",params:e})}function l(e){return t.post({url:"/question/knowledge/add",params:e})}function r(e){return t.delete({url:"/question/knowledge/delete/"+e})}export{l as a,o as b,r as d,d as g};
