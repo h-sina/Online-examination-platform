@@ -32,13 +32,9 @@
 <script lang="ts">
 import { defineComponent, onMounted, toRefs, reactive } from 'vue';
 import { GetStuByTeacher } from '/@/api/exam/exam';
-import Markpage from './Markpage.vue';
-// import Markstupage from './Markstupage.vue';
 import Paper from './Paper.vue';
 export default defineComponent({
   components: {
-    // Markpage,
-    // Markstupage,
     Paper,
   },
   props: {
