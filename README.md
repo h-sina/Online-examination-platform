@@ -1,4 +1,4 @@
-中文   |   [English](./README.zh_CN.md)
+中文   |   [English](./README.zh-CN.md)
 
 <div align="center"> 
 <!--  <a href="https://github.com/anncwb/vue-vben-admin"> <img alt="VbenAdmin Logo" width="200" src="https://anncwb.github.io/anncwb/images/logo.png"> </a> -->
