@@ -60,7 +60,6 @@ export default defineComponent({
       visible: false,
       paperId: '',
       stuId: '',
-      // loadingMore: true,
     });
     async function getStusInOneClass(id) {
       let res = await GetStuByTeacher(id);

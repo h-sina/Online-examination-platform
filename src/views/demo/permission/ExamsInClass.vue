@@ -26,21 +26,18 @@
         </a-list-item>
       </template>
     </a-list>
-    <ExamInClass :id="examId" :paperId="paperId" v-if="oneExam" @exit="exit" />
-    <!-- <Paper v-if="oneExam" /> -->
+    <ExamInclass :id="examId" :paperId="paperId" v-if="oneExam" @exit="exit" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, toRefs, reactive } from 'vue';
 import { getExamByTeacher } from '/@/api/exam/exam';
-import ExamInClass from './ExamInClass.vue';
-// import Paper from './Paper.vue';
+import ExamInclass from './ExamInclass.vue';
 
 export default defineComponent({
   components: {
-    ExamInClass,
-    // Paper,
+    ExamInclass,
   },
   props: {
     id: {
