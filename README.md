@@ -62,7 +62,7 @@
 
 ## ⛰ 演示截图 | Screenshot
 ### 登陆注册
-<a href="" target="_blank">![](https://img-blog.csdnimg.cn/c9b4281bb9604c28835738ba4596a91a.gif)</a>
+<a href="" target="_blank" style="border: 1px #ced8e4 solid; border-radius: 20px; box-shadow: 0 0 10px 2px #bdcee0;">![](https://img-blog.csdnimg.cn/c9b4281bb9604c28835738ba4596a91a.gif)</a>
 
 ### 学生练习
 ![](https://img-blog.csdnimg.cn/a4ec648b81984ad38ee0ae79317277ac.gif)
