@@ -609,8 +609,8 @@ export default defineComponent({
 
     async function del(record) {
       console.log(record);
-      //  const res = await deleteQuestionDetail({questionId: record.id});
-      //  console.log(res)
+      const res = await deleteQuestionDetail({ questionId: record.id });
+      console.log(res);
     }
 
     async function updateQuestionDetail(record) {

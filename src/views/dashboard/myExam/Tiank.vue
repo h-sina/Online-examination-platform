@@ -1,5 +1,5 @@
 <template>
-  <a-input v-model:value="answer" @change="submit" />
+  <a-input v-model:value="answer" @change="submit" placeholder="空格隔开" />
 </template>
 
 <script>
@@ -19,11 +19,22 @@ export default {
       type: String,
       required: true,
     },
+    answerNum: {
+      type: Number,
+      required: true,
+    },
   },
   emits: ['score'],
   setup (props, actions) {
     onMounted(() => {
-      data.answer = props.value;
+      let answer = props.value;
+      if (answer && answer != '') {
+        answer = answer.split('');
+        answer.splice(0, 1);
+        answer.splice(answer.length - 1);
+        answer = answer.join('').split(',').join(' ');
+      }
+      data.answer = answer;
     });
     const data = reactive({
       answer: '',
@@ -37,7 +48,8 @@ export default {
       //   // actions.emit('score', res.data.answer == data.answer, id);
       // } else {
       // }
-      actions.emit('score', '主观题', id, data.answer, 0);
+      let answer = '[' + data.answer.split(' ').toString() + ']';
+      actions.emit('score', '主观题', id, answer, 0);
     }
     return {
       ...toRefs(data),

@@ -22,7 +22,8 @@
               <a-avatar :src="item.pic" />
             </template>
           </a-list-item-meta>
-          <div>{{ item.number }}</div>
+          <div>{{ item.state }}&nbsp</div>
+          <div>未批改数：{{ item.unCorrected }}</div>
         </a-list-item>
       </template>
     </a-list>
@@ -61,6 +62,24 @@ export default defineComponent({
     async function getExamsInOneClass(id) {
       let res = await getExamByTeacher(id);
       console.log(res);
+      res.data.map((i) => {
+        let state = i.state;
+        switch (state) {
+          case -1:
+            state = '已结束';
+            break;
+          case 0:
+            state = '未开始';
+            break;
+          case 1:
+            state = '进行中';
+            break;
+          case 2:
+            state = '待批阅';
+            break;
+        }
+        i.state = state;
+      });
       if (res.code === 'ITEST-200') {
         data.list = res.data;
         data.loading = false;

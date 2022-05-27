@@ -71,6 +71,7 @@
             :questionId="item.id"
             :typeId="listCurrent.type"
             :value="getValue(item.id)"
+            :answerNum="item.answerNum"
             @score="computedScore"
             v-if="listCurrent.type === 4"
           />
@@ -287,6 +288,7 @@ export default defineComponent({
           duration: 3,
         });
         actions.emit('subExam');
+        data.examRe = [];
       } else {
         notification.error({
           message: '出错啦，请联系管理员',

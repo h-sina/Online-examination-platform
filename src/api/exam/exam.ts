@@ -10,7 +10,7 @@ enum Api {
   GetExamsByClassId = '/user/teacher/exam-list',
 
   GetExamsByTeacher = '/clazz/tea/list',
-  GetExamByTeacher = '/clazz/my-exam',
+  GetExamByTeacher = '/user/teacher/exam-list',
   GetStuByTeacher = '/clazz/stu-list',
 }
 
