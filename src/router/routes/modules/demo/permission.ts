@@ -14,11 +14,19 @@ const permission: AppRouteModule = {
 
   children: [
     {
+      path: 'markPaper',
+      name: 'MarkPaper',
+      component: () => import('/@/views/demo/permission/MarkPaper.vue'),
+      meta: {
+        title: '主页',
+      },
+    },
+    {
       path: 'index',
       name: 'Index',
       component: () => import('/@/views/demo/permission/index.vue'),
       meta: {
-        title: '主页',
+        title: '题库管理',
       },
     },
     {
@@ -26,7 +34,7 @@ const permission: AppRouteModule = {
       name: 'Subject',
       component: () => import('/@/views/demo/permission/Subject.vue'),
       meta: {
-        title: '题库管理',
+        title: '建题管理',
       },
     },
     {
@@ -34,33 +42,25 @@ const permission: AppRouteModule = {
       name: 'Exam',
       component: () => import('/@/views/demo/permission/Exam.vue'),
       meta: {
-        title: '考试管理',
+        title: '组卷管理',
       },
     },
-    {
-      path: 'class',
-      name: 'Class',
-      component: () => import('/@/views/demo/permission/Class.vue'),
-      meta: {
-        title: '班级管理',
-      },
-    },
-    {
-      path: 'message',
-      name: 'Message',
-      component: () => import('/@/views/demo/permission/Message.vue'),
-      meta: {
-        title: '消息管理',
-      },
-    },
-    {
-      path: 'markPaper',
-      name: 'MarkPaper',
-      component: () => import('/@/views/demo/permission/MarkPaper.vue'),
-      meta: {
-        title: '批卷管理',
-      },
-    },
+    // {
+    //   path: 'class',
+    //   name: 'Class',
+    //   component: () => import('/@/views/demo/permission/Class.vue'),
+    //   meta: {
+    //     title: '班级管理',
+    //   },
+    // },
+    // {
+    //   path: 'message',
+    //   name: 'Message',
+    //   component: () => import('/@/views/demo/permission/Message.vue'),
+    //   meta: {
+    //     title: '消息管理',
+    //   },
+    // },
 
     // {
     //   path: 'front',

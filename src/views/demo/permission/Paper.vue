@@ -2,9 +2,10 @@
   <div>
     <a-button shape="round" type="button" class="m-5" @click="exit">返回</a-button>
     <a-button shape="round" type="button" class="m-5" @click="sub">提交</a-button>
+    <a-typography-title :level="2" class="m-5">{{ list.examTitle }}</a-typography-title>
     <a-list
       item-layout="horizontal"
-      :data-source="list"
+      :data-source="list.correctQuesVos"
       class="demo-loadmore-list"
       :loading="loading"
     >
@@ -17,22 +18,25 @@
                   <b>小题{{ index + 1 }}</b>
                 </template>
               </a-list-item-meta>
-              <li class="m-3">{{ i.content }}</li>题目答案
+              <li class="m-3">{{ i.content }}</li>
+              <b>题目答案：</b>
               <li class="m-3">
                 <ul v-for="j in i.answerList">
                   <li>{{ j }}</li>
                 </ul>
-              </li>学生答案
+              </li>
+              <b>{{ list.stuName }}的答案：</b>
               <li class="m-3">
                 <ul v-for="j in i.stuAnswerList">
                   <li>{{ j }}</li>
                 </ul>
-              </li>题目解析
+              </li>题目解析：
               <li class="m-3">{{ i.analysis }}</li>
               <a-input-number id="inputNumber" v-model:value="value" :min="1" :max="10" />
-              当前值：{{
+              得分{{
               value
               }}
+              <hr class="m-2" />
             </ul>
           </a-card>
         </a-list-item>
@@ -63,7 +67,7 @@ export default defineComponent({
       get(props.paperId, props.stuId);
     });
     const data = reactive({
-      list: [],
+      list: {},
       result: [],
       obj: {
         score: 0,
@@ -75,7 +79,7 @@ export default defineComponent({
       let res = await getExamByPaperIdAndStuId(paperId, stuId);
       console.log(res);
       if (res.code === 'ITEST-200') {
-        data.list = res.data.correctQuesVos;
+        data.list = res.data;
         data.loading = false;
       }
     }

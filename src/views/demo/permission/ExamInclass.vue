@@ -1,7 +1,22 @@
 <template>
   <div>
     <a-button shape="round" type="button" class="m-5" @click="exit" v-if="!visible">返回</a-button>
-    <a-list
+    <a-table :columns="columns" :data-source="list" v-if="!visible">
+      <!-- <template #renderItem="{ item }">
+        <template #avatar>
+          <a-avatar :src="item.pic" />
+        </template>
+      </template>-->
+      <template #name="{ text }">
+        <a>{{ text }}</a>
+      </template>
+      <template #action="{ record }">
+        <span>
+          <a @click="mark(record.id)">点击批改</a>
+        </span>
+      </template>
+    </a-table>
+    <!-- <a-list
       class="demo-loadmore-list"
       :loading="loading"
       item-layout="horizontal"
@@ -24,7 +39,7 @@
           <div>{{ item.number }}</div>
         </a-list-item>
       </template>
-    </a-list>
+    </a-list>-->
     <Paper :paperId="paperId" :stuId="stuId" v-if="visible" @ret="ret" />
   </div>
 </template>
@@ -33,6 +48,30 @@
 import { defineComponent, onMounted, toRefs, reactive } from 'vue';
 import { GetStuByTeacher } from '/@/api/exam/exam';
 import Paper from './Paper.vue';
+const columns = [
+  // {
+  //   title: '头像',
+  //   key: 'pic',
+  //   dataIndex: 'pic',
+  //   slots: { customRender: 'tags' },
+  // },
+  {
+    title: '姓名',
+    dataIndex: 'studentName',
+    key: 'studentName',
+    // slots: { customRender: 'name' },
+  },
+  {
+    title: '性别',
+    dataIndex: 'userSex',
+    key: 'userSex',
+  },
+  {
+    title: '批阅',
+    key: 'action',
+    slots: { customRender: 'action' },
+  },
+];
 export default defineComponent({
   components: {
     Paper,
@@ -66,6 +105,13 @@ export default defineComponent({
       console.log(res);
       if (res.code === 'ITEST-200') {
         data.list = res.data;
+        data.list.map((i) => {
+          if (i.userSex == 1) {
+            i.userSex = '男';
+          } else {
+            i.userSex = '女';
+          }
+        });
         data.loading = false;
       }
     }
@@ -84,6 +130,7 @@ export default defineComponent({
       mark,
       exit,
       ret,
+      columns,
     };
   },
 });

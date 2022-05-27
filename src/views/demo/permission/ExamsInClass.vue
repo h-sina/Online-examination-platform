@@ -9,7 +9,7 @@
       :data-source="list"
       v-if="!oneExam"
     >
-      <template #renderItem="{ item }">
+      <!-- <template #renderItem="{ item }">
         <a-list-item>
           <template #actions>
             <a @click="enterExam(item.id)">进入该次考试批阅</a>
@@ -25,7 +25,27 @@
           <div>{{ item.state }}&nbsp</div>
           <div>未批改数：{{ item.unCorrected }}</div>
         </a-list-item>
-      </template>
+      </template>-->
+      <a-row :gutter="16">
+        <a-card
+          style="width: 260px; margin: 10px"
+          :loading="loading"
+          v-for="i in list"
+          :title="`${i.title}`"
+          :span="8"
+        >
+          <p>开始时间：{{ i.startTime }}</p>
+          <p>结束时间：{{ i.endTime }}</p>
+          <p>{{ i.state }}</p>
+          <p>未批改数：{{ i.unCorrected }}</p>
+          <a-button
+            shape="round"
+            type="primary"
+            style="margin-top: 16px"
+            @click="enterExam(i.id)"
+          >考试批阅</a-button>
+        </a-card>
+      </a-row>
     </a-list>
     <ExamInclass :id="examId" :paperId="paperId" v-if="oneExam" @exit="exit" />
   </div>
@@ -109,6 +129,6 @@ export default defineComponent({
 <style scoped>
 .demo-loadmore-list {
   min-height: 350px;
-  margin: 20px 150px 0 150px;
+  margin: 20px;
 }
 </style>

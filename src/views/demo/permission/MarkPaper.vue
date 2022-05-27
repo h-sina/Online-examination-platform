@@ -7,15 +7,15 @@
       :data-source="data.list"
       v-show="data.allClass"
     >
-      <template #loadMore>
+      <!-- <template #loadMore>
         <div
           :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
         >
           <a-spin v-if="loadingMore" />
           <a-button shape="round" v-else @click="data.loadMore">loading more</a-button>
         </div>
-      </template>
-      <template #renderItem="{ item }">
+      </template>-->
+      <!-- <template #renderItem="{ item }">
         <a-list-item>
           <template #actions>
             <a @click="enterClass(item.id)">进入班级</a>
@@ -30,7 +30,29 @@
           </a-list-item-meta>
           <div>{{ item.number }}</div>
         </a-list-item>
-      </template>
+      </template>-->
+      <a-row :gutter="16">
+        <a-card
+          style="width: 260px; margin: 10px"
+          :loading="loading"
+          v-for="i in data.list"
+          :title="`${i.course}`"
+          :span="8"
+        >
+          <template #cover>
+            <img alt="课程图片" :src="i.pic" />
+          </template>
+          <p>班级号：{{ i.number }}</p>
+          <p>开始时间：{{ i.startTime }}</p>
+          <p>结束时间：{{ i.endTime }}</p>
+          <a-button
+            shape="round"
+            type="primary"
+            style="margin-top: 16px"
+            @click="enterClass(i.id)"
+          >进入课程</a-button>
+        </a-card>
+      </a-row>
     </a-list>
     <ExamsInClass :id="data.classId" v-if="data.oneClass" @ret="ret" />
   </div>
