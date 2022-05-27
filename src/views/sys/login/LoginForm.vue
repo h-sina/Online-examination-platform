@@ -49,36 +49,54 @@
     </ARow>
 
     <FormItem class="enter-x">
-      <Button type="primary" size="large" block @click="handleLogin" :loading="loading">
+      <Button type="primary" size="large" block @click="handleLogin()" :loading="loading">
         {{
         t('sys.login.loginButton')
         }}
       </Button>
-      <!-- <Button size="large" class="mt-4 enter-x" block @click="handleRegister">
-        {{ t('sys.login.registerButton') }}
-      </Button>-->
+      <Button
+        size="large"
+        class="mt-4 enter-x"
+        block
+        @click="setLoginState(LoginStateEnum.REGISTER)"
+      >{{ t('sys.login.registerButton') }}</Button>
     </FormItem>
     <ARow class="enter-x">
       <ACol :md="8" :xs="24">
-        <Button block @click="setLoginState(LoginStateEnum.MOBILE)">
-          {{
-          t('sys.login.mobileSignInFormTitle')
-          }}
-        </Button>
+        <Button
+          block
+          @click="
+            handleLogin({
+              userPassword: 'password',
+              userNumber: '888666',
+              mode: 'none', //不要默认的错误提示
+            })
+          "
+        >{{ t('教师登录测试') }}</Button>
       </ACol>
       <ACol :md="8" :xs="24" class="!my-2 !md:my-0 xs:mx-0 md:mx-2">
-        <Button block @click="setLoginState(LoginStateEnum.QR_CODE)">
-          {{
-          t('sys.login.qrSignInFormTitle')
-          }}
-        </Button>
+        <Button
+          block
+          @click="
+            handleLogin({
+              userPassword: 'password',
+              userNumber: '333001',
+              mode: 'none', //不要默认的错误提示
+            })
+          "
+        >{{ t('教务登录测试') }}</Button>
       </ACol>
       <ACol :md="7" :xs="24">
-        <Button block @click="setLoginState(LoginStateEnum.REGISTER)">
-          {{
-          t('sys.login.registerButton')
-          }}
-        </Button>
+        <Button
+          block
+          @click="
+            handleLogin({
+              userPassword: 'password',
+              userNumber: '1122334455',
+              mode: 'none', //不要默认的错误提示
+            })
+          "
+        >{{ t('管理员测试') }}</Button>
       </ACol>
     </ARow>
 
@@ -143,12 +161,31 @@ const { validForm } = useFormValid(formRef);
 
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
 
-async function handleLogin() {
+async function handleLogin(form) {
+  if (form) {
+    let userInfo = await userStore.login(form);
+    if (userInfo) {
+      notification.success({
+        message: t('sys.login.loginSuccessTitle'),
+        description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.nickName}`,
+        duration: 3,
+      });
+    } else {
+      createErrorModal({
+        title: t('sys.api.errorTip'),
+        // content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
+        content: t('sys.api.errMsg401') || t('sys.api.networkExceptionMsg'),
+        getContainer: () => document.body.querySelector(`.${prefixCls}`) || document.body,
+      });
+      loading.value = false;
+    }
+  }
   const data = await validForm();
   if (!data) return;
   try {
     loading.value = true;
-    const userInfo = await userStore.login({
+
+    let userInfo = await userStore.login({
       userPassword: data.password,
       userNumber: data.account,
       mode: 'none', //不要默认的错误提示
@@ -161,6 +198,7 @@ async function handleLogin() {
       });
     }
   } catch (error) {
+    console.log(error);
     createErrorModal({
       title: t('sys.api.errorTip'),
       // content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),

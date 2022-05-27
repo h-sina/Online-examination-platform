@@ -169,13 +169,16 @@ export const usePermissionStore = defineStore({
           menuList.sort((a, b) => {
             return (a.meta?.orderNo || 0) - (b.meta?.orderNo || 0);
           });
-
+          console.log(menuList);
           if (roleList == 'student') {
-            menuList.splice(2, 2);
+            menuList.splice(2, 3);
           } else if (roleList == 'teacher') {
-            menuList.splice(3);
+            menuList.splice(3, 2);
           } else if (roleList == 'sa') {
+            menuList.splice(4);
+          } else if (roleList == 'ad') {
           } else {
+            menuList.splice(2, 3);
           }
           this.setFrontMenuList(menuList);
           // Convert multi-level routing to level 2 routing
