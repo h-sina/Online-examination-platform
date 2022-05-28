@@ -91,6 +91,7 @@ export default defineComponent({
     async function getExamsList() {
       let res = await getExamList();
       data.examList = res.data;
+      console.log(res);
     }
     const enterExam = (id) => {
       data.paperId = id;

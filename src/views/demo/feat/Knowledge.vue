@@ -1,6 +1,29 @@
 <template>
   <div>
     <a-button shape="round" class="editable-add-btn m-5" @click="handleAdd">添加知识点</a-button>
+    <a-modal v-model:visible="visible" title="添加知识点" @ok="handleOk">
+      <a-form-item label="知识点名" style="margin: 20px">
+        <a-input label="name" v-model:value="newData.name" />
+      </a-form-item>
+      <a-form-item label="知识点描述" style="margin: 20px">
+        <a-input label="pointDescribe" v-model:value="newData.pointDescribe" />
+      </a-form-item>
+      <a-form-item label="前驱知识点" style="margin: 20px">
+        <!-- <a-input label="superPoint" v-model:value="superPoint" /> -->
+        <a-select
+          v-model="newData.superPoint"
+          style="width: 120px"
+          @focus="focus"
+          @change="handleChange"
+        >
+          <a-select-option v-for="i in knowledgePointList" :value="i.id">
+            {{
+            i.name
+            }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+    </a-modal>
     <a-table bordered :data-source="knowledgePointList" :columns="columns" class="m-5">
       <template
         v-for="col in ['id', 'courseName', 'name', 'pointDescribe', 'superPointName']"
@@ -44,17 +67,7 @@
   </div>
 </template>
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  reactive,
-  Ref,
-  ref,
-  UnwrapRef,
-  toRefs,
-  onMounted,
-  toRefs,
-} from 'vue';
+import { computed, defineComponent, reactive, UnwrapRef, toRefs, onMounted, toRefs } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { cloneDeep } from 'lodash-es';
 import {
@@ -119,21 +132,19 @@ export default defineComponent({
         slots: { customRender: 'operation1' },
       },
     ];
-    const dataSource: Ref<DataItem[]> = ref([
-      {
-        key: '0',
-        name: 'Edward King 0',
-        age: 32,
-        address: 'London, Park Lane no. 0',
+    const data = reactive({
+      knowledgePointList: [],
+      visible: false,
+      newData: {
+        name: '',
+        pointDescribe: '',
+        superPoint: '',
       },
-      {
-        key: '1',
-        name: 'Edward King 1',
-        age: 32,
-        address: 'London, Park Lane no. 1',
-      },
-    ]);
-
+    });
+    onMounted(() => {
+      // 获取知识点列表
+      GetknowledgeList();
+    });
     const count = computed(() => dataSource.value.length + 1);
     const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
 
@@ -147,57 +158,39 @@ export default defineComponent({
       console.log('save');
       console.log(key);
 
-      // let obj = {
-      //   id: 0,
-      //   name: 'string',
-      //   pointDescribe: 'string',
-      //   superPoint: 0,
-      // };
-      let obj1 = data.knowledgePointList.filter((item) => key === item.id);
+      let obj1 = JSON.parse(JSON.stringify(editableData[key]));
+      console.log(editableData[key]);
       console.log(obj1);
-      // obj.id = obj1.id;
-      // obj.name = obj1.name;
-      // obj.pointDescribe = obj1.pointDescribe;
-      // obj.superPoint = obj1.superPoint;
-      // console.log(obj);
       Object.assign(
         data.knowledgePointList.filter((item) => key === item.id)[0],
         editableData[key],
       );
       delete editableData[key];
-      // delete editableData[key];
-      // 更新
-      // updateTheKnowledge(obj);
+      delete obj1.courseName;
+      updateTheKnowledge(obj1);
     };
 
     const onDelete = (key: string) => {
-      dataSource.value = dataSource.value.filter((item) => item.key !== key);
-      // 删除
       console.log(key);
       delTheKnowledge(key);
+      // data.knowledgePointList = data.knowledgePointList.filter((item) => item.key !== key);
       GetknowledgeList();
-      data.knowledgePointList = data.knowledgePointList.filter((item) => item.key !== key);
     };
     const handleAdd = () => {
-      const newData = {
-        name: 'string',
-        pointDescribe: 'string',
-        superPoint: 0,
-      };
-      dataSource.value.push(newData);
-      // 添加
-      data.knowledgePointList.push(newData);
-      addTheKnowledge(newData);
+      data.visible = true;
     };
-
-    const data = reactive({
-      knowledgePointList: [],
-    });
-
-    onMounted(() => {
-      // 获取知识点列表
+    const handleOk = () => {
+      console.log(data.newData);
+      // dataSource.value.push(data.newData);
+      // 添加
+      // data.knowledgePointList.push(data.newData);
+      addTheKnowledge(data.newData);
       GetknowledgeList();
-    });
+    };
+    const handleChange = (value: string) => {
+      console.log(`selected ${value}`);
+      data.newData.superPoint = value;
+    };
 
     async function GetknowledgeList() {
       let res = await getknowledgeList({
@@ -233,12 +226,14 @@ export default defineComponent({
           message: res.msg,
           duration: 3,
         });
+        data.visible = false;
       } else {
         notification.error({
           message: '处理失败请联系工作人员',
           duration: 3,
         });
       }
+      data.newData = [];
     }
 
     return {
@@ -246,11 +241,12 @@ export default defineComponent({
       columns,
       onDelete,
       handleAdd,
-      dataSource,
       editableData,
       count,
       edit,
       save,
+      handleOk,
+      handleChange,
     };
   },
 });

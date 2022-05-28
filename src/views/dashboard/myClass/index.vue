@@ -31,6 +31,7 @@
             </a-card>
           </a-row>
         </a-list>
+        <a-empty v-show="list.length === 0" />
       </a-tab-pane>
       <a-tab-pane key="2" :disabled="disabledCenter">
         <template #tab>
