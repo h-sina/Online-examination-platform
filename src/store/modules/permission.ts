@@ -175,7 +175,7 @@ export const usePermissionStore = defineStore({
           } else if (roleList == 'teacher') {
             menuList.splice(3, 2);
           } else if (roleList == 'sa') {
-            menuList.splice(4);
+            menuList.splice(4, 1);
           } else if (roleList == 'ad') {
           } else {
             menuList.splice(2, 3);

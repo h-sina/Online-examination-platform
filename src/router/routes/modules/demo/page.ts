@@ -20,7 +20,23 @@ const page: AppRouteModule = {
       name: 'Jwclass',
       component: () => import('/@/views/demo/page/jwclass/index.vue'),
       meta: {
-        title: t('班级管理'),
+        title: t('建班管理'),
+      },
+    },
+    {
+      path: 'teacher',
+      name: 'Teacher',
+      component: () => import('/@/views/demo/page/Teacher.vue'),
+      meta: {
+        title: t('所有教师'),
+      },
+    },
+    {
+      path: 'classes',
+      name: 'Classes',
+      component: () => import('/@/views/demo/page/Classes.vue'),
+      meta: {
+        title: t('学院课程'),
       },
     },
     // =============================form start=============================

@@ -21,7 +21,18 @@ enum Api {
   GetExamList = '/user/my-exam',
 
   UpdateAvatar = '/user/uploadAvatar',
+  JoinClassByCode = '/user/student/add-clazz',
 }
+
+/**
+ * @description: 通过课程码加入班级
+ */
+export function joinClassByCode(params) {
+  return defHttp.post({
+    url: Api.JoinClassByCode + '/' + params,
+  });
+}
+
 /**
  * @description: user avatar api
  */
