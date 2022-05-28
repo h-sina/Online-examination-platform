@@ -22,6 +22,47 @@ enum Api {
 
   UpdateAvatar = '/user/uploadAvatar',
   JoinClassByCode = '/user/student/add-clazz',
+  Announcement = '/user/announcement',
+
+  SendEnail = '/user/change-pwd/send',
+  VerifyEmail = '/user/change-pwd/verify',
+  ChangePass = '/user/change-pwd/change',
+}
+
+/**
+ * @description: 修改密码 发邮箱
+ */
+export function sendEnail(params) {
+  return defHttp.put({
+    url: Api.SendEnail + '/' + params,
+  });
+}
+
+/**
+ * @description: 修改密码 验证邮箱
+ */
+export function verifyEmail(mail, code) {
+  return defHttp.put({
+    url: Api.VerifyEmail + '/' + mail + '/' + code,
+  });
+}
+
+/**
+ * @description: 修改密码
+ */
+export function changePass(mail, newPwd) {
+  return defHttp.put({
+    url: Api.ChangePass + '/' + mail + '/' + newPwd,
+  });
+}
+
+/**
+ * @description: 获取公告
+ */
+export function announcement() {
+  return defHttp.post({
+    url: Api.Announcement,
+  });
 }
 
 /**

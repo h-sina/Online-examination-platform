@@ -7,11 +7,12 @@
       <template #renderItem="{ item }">
         <ListItem>
           <ListItemMeta>
-            <template #description>
-              {{ item.date }}
-            </template>
+            <template #description>{{ item.date }}</template>
             <!-- eslint-disable-next-line -->
-            <template #title> {{ item.name }} <span v-html="item.desc"> </span> </template>
+            <template #title>
+              {{ item.name }}
+              <span v-html="item.desc"></span>
+            </template>
             <template #avatar>
               <Icon :icon="item.avatar" :size="30" />
             </template>
@@ -22,10 +23,18 @@
   </Card>
 </template>
 <script lang="ts" setup>
-  import { Card, List } from 'ant-design-vue';
-  import { dynamicInfoItems } from './data';
-  import { Icon } from '/@/components/Icon';
-
-  const ListItem = List.Item;
-  const ListItemMeta = List.Item.Meta;
+import { Card, List } from 'ant-design-vue';
+import { dynamicInfoItems } from './data';
+import { Icon } from '/@/components/Icon';
+import { announcement } from '/@/api/sys/user';
+import { onMounted } from 'vue';
+onMounted(() => {
+  get();
+});
+async function get() {
+  let res = await announcement();
+  console.log(res);
+}
+const ListItem = List.Item;
+const ListItemMeta = List.Item.Meta;
 </script>

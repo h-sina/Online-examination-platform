@@ -58,7 +58,7 @@
 <script setup>
 import { onMounted, computed, reactive, ref } from 'vue';
 import { createClass, uploadClassPic } from '/@/api/sa/sa';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import { CheckCircleTwoTone, AntDesignOutlined } from '@ant-design/icons-vue';
 import { CropperAvatar } from '/@/components/Cropper';
 
