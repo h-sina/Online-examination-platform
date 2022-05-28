@@ -5,6 +5,16 @@ enum Api {
   GetClassList = '/clazz/list',
   GetStudentList = '/clazz/stu-list',
   GetExamList = '/clazz/my-exam',
+  DelStu = '/clazz/remove-stu',
+}
+
+/**
+ * @description: 移除学生
+ */
+export function delStu(clazzId, stuId) {
+  return defHttp.delete({
+    url: Api.DelStu + '/' + clazzId + '/' + stuId,
+  });
 }
 
 /**

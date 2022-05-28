@@ -9,23 +9,43 @@
       :data-source="list"
       v-if="!oneExam"
     >
-      <!-- <template #renderItem="{ item }">
-        <a-list-item>
-          <template #actions>
-            <a @click="enterExam(item.id)">进入该次考试批阅</a>
+      <CollapseContainer :title="'班级成员(' + `${stuList.length}` + ')'" :canExpan="true">
+        <a-list
+          class="demo-loadmore-list"
+          :loading="loading"
+          item-layout="horizontal"
+          :data-source="stuList"
+        >
+          <!-- <template #loadMore>
+          <div
+            :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
+          >
+            <a-spin v-if="loadingMore" />
+            <a-button v-else @click="loadMore">loading more</a-button>
+          </div>
+          </template>-->
+          <template #renderItem="{ item }">
+            <a-list-item>
+              <template #actions>
+                <a @click="del(item.id)">移除</a>
+                <a>联系ta</a>
+              </template>
+              <a-list-item-meta :description="item.userSex">
+                <template #title>
+                  <a>{{ item.studentName }}</a>
+                </template>
+                <template #avatar>
+                  <a-avatar :src="item.pic" />
+                </template>
+              </a-list-item-meta>
+              <!-- <div>content</div> -->
+            </a-list-item>
           </template>
-          <a-list-item-meta :description="`开始时间: ${item.startTime}   结束时间: ${item.endTime}`">
-            <template #title>
-              <a>{{ item.title }}</a>
-            </template>
-            <template #avatar>
-              <a-avatar :src="item.pic" />
-            </template>
-          </a-list-item-meta>
-          <div>{{ item.state }}&nbsp</div>
-          <div>未批改数：{{ item.unCorrected }}</div>
-        </a-list-item>
-      </template>-->
+        </a-list>
+      </CollapseContainer>
+      <a-modal v-model:visible="visible" title="确认框" @ok="handleOk" width="600px">
+        <p class="ml-5">确定要从班级里移除该名学生</p>
+      </a-modal>
       <a-row :gutter="16">
         <a-card
           style="width: 260px; margin: 10px"
@@ -53,12 +73,17 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, toRefs, reactive } from 'vue';
-import { getExamByTeacher } from '/@/api/exam/exam';
+import { getExamByTeacher, GetStuByTeacher } from '/@/api/exam/exam';
+import { delStu } from '/@/api/class/class';
 import ExamInclass from './ExamInclass.vue';
+import { CollapseContainer } from '/@/components/Container/index';
+import { useMessage } from '/@/hooks/web/useMessage';
+const { notification } = useMessage();
 
 export default defineComponent({
   components: {
     ExamInclass,
+    CollapseContainer,
   },
   props: {
     id: {
@@ -70,18 +95,35 @@ export default defineComponent({
   setup(props, actions) {
     onMounted(() => {
       getExamsInOneClass(props.id);
+      getStusInOneClass(props.id);
     });
     const data = reactive({
       list: [],
+      stuList: [],
       loading: true,
       oneExam: false,
       examId: '',
       paperId: '',
+      visible: false,
+      delStuId: '',
       // loadingMore: true,
     });
+    async function getStusInOneClass(id) {
+      let res = await GetStuByTeacher(id);
+      if (res.code === 'ITEST-200') {
+        data.stuList = res.data;
+        data.stuList.map((i) => {
+          if (i.userSex == 1) {
+            i.userSex = '男';
+          } else {
+            i.userSex = '女';
+          }
+        });
+        // data.loading = false;
+      }
+    }
     async function getExamsInOneClass(id) {
       let res = await getExamByTeacher(id);
-      console.log(res);
       res.data.map((i) => {
         let state = i.state;
         switch (state) {
@@ -116,11 +158,37 @@ export default defineComponent({
     const ret = () => {
       actions.emit('ret');
     };
+    const del = (id) => {
+      data.visible = true;
+      data.delStuId = id;
+    };
+    const handleOk = () => {
+      delstu();
+    };
+    async function delstu() {
+      let res = await delStu(props.id, data.delStuId);
+      if (res.code == 'ITEST-200') {
+        data.visible = false;
+        getStusInOneClass(props.id);
+
+        notification.success({
+          message: '移除成功',
+          duration: 3,
+        });
+      } else {
+        notification.error({
+          message: '移除失败',
+          duration: 3,
+        });
+      }
+    }
     return {
       ...toRefs(data),
       enterExam,
       exit,
       ret,
+      del,
+      handleOk,
     };
   },
 });
