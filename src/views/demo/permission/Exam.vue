@@ -371,7 +371,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .demo-wrap {
   width: 90%;
-  background-color: @component-background;
+  background-color: #eee;
   border-radius: 10px;
 }
 </style>

@@ -68,6 +68,15 @@ const dashboard: AppRouteModule = {
         title: '我的班级',
       },
     },
+    {
+      path: 'answered',
+      name: 'Answered',
+      component: () => import('/@/views/dashboard/myClass/Answered.vue'),
+      meta: {
+        title: '考试结果',
+        hideMenu: true,
+      },
+    },
   ],
 };
 

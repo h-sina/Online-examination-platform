@@ -28,9 +28,14 @@
           </template>
         </a-list-item-meta>
 
-        <a-list size="small" bordered :data-source="item.knowPointList">
+        <a-list
+          style="background-color: #ffffff"
+          size="small"
+          bordered
+          :data-source="item.knowPointList"
+        >
           <div v-show="classListShow">
-            <a-tree :tree-data="treeData" show-icon default-expand-all />
+            <a-directory-tree :tree-data="treeData" show-icon default-expand-all />
           </div>
           <template #header>
             <div>课程开始</div>
@@ -45,26 +50,44 @@
   <!-- 课程主页基本信息 -->
 
   <!-- 课程考试基本信息 -->
-  <div style="background-color: #ececec; padding: 20px; margin: 10px">
-    <a-typography-text code>课程考试</a-typography-text>
+  <div style="background-color: #ffffff; padding: 20px; margin: 10px">
+    <!-- <a-typography-text code>课程考试</a-typography-text> -->
+    <a-typography-title :level="4">课程考试({{ examList.length }})</a-typography-title>
     <a-row :gutter="16">
       <a-col :span="8" v-for="i in examList">
-        <a-card :title="i.title" :bordered="false" style="margin: 10px">
-          <p>{{ i.startTime }}</p>
-          <p>{{ i.endTime }}</p>
+        <a-card
+          :title="i.title"
+          :bordered="false"
+          style="
+            margin: 10px;
+            background-color: #f0f2f5;
+            border: 2px solid #fff;
+            border-radius: 10px;
+          "
+        >
+          <p>开始时间：{{ i.startTime }}</p>
+          <p>结束时间：{{ i.endTime }}</p>
           <p>{{ i.socre }}</p>
           <p>{{ i.state }}</p>
+          <a-button v-if="i.state == '考试已结束'">
+            <router-link :to="{ name: 'Answered', params: { examId: i.id } }">查看试卷</router-link>
+          </a-button>
+          <a-button v-if="i.state == '还未开始'" disabled="true">禁止答题</a-button>
+          <a-tooltip title="考试请进入我的考试这里暂未联通">
+            <a-button v-if="i.state == '正在考试...'">开始考试</a-button>
+          </a-tooltip>
         </a-card>
       </a-col>
     </a-row>
   </div>
   <!-- 课程考试基本信息 -->
   <!-- 班级成员信息 -->
-  <div style="background-color: #ececec; padding: 20px; margin: 10px">
-    <a-typography-text code>班级成员</a-typography-text>
+  <div style="background-color: #ffffff; padding: 20px; margin: 10px">
+    <!-- <a-typography-text code>班级成员({{ stuList.length }})</a-typography-text> -->
+    <a-typography-title :level="4">班级成员({{ stuList.length }})</a-typography-title>
 
     <div v-for="i in stuList">
-      <a-card hoverable style="width: 300px; margin: 10px">
+      <a-card hoverable style="width: 300px; margin: 10px; background-color: #f0f2f5">
         <a-card-meta :title="i.studentName" :description="i.userSex + ''">
           <template #avatar>
             <a-avatar :src="i.pic" />
@@ -77,10 +100,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, watch, computed } from 'vue';
 import { getClassIndex, getStudentList, getExamList } from '/@/api/class/class';
 
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
+import { useUserStore } from '/@/store/modules/user';
 
 export default defineComponent({
   components: {
@@ -96,14 +120,13 @@ export default defineComponent({
   },
   emits: ['returnMyClass'],
   setup(props, actions) {
+    const userStore = useUserStore();
+    const userinfo = computed(() => userStore.getUserInfo);
+
     watch(
       () => props.classId,
       (count, pre) => {
-        console.log(count, pre);
         getClassIndex1(count);
-        console.log('1');
-        console.log(state.treeData);
-
         getStudentList1(count);
         getExamList1(count);
       },
@@ -145,22 +168,18 @@ export default defineComponent({
     }
 
     const classToTree = (arr) => {
+      state.treeData = [];
       arr.forEach((i, index) => {
         let obj = {
           title: 'parent 1',
           key: '0-0',
-          slots: {
-            icon: 'smile',
-          },
           children: [],
         };
-        let objchild = { title: 'leaf', key: '0-0-0', slots: { icon: 'meh' } };
+        let objchild = { title: 'leaf', key: '0-0-0' };
         obj.title = '第' + `${index + 1}` + '章' + ' ' + i.name;
-        // obj.key = i.id;
         if (i.knowPoint2) {
           i.knowPoint2.forEach((i, index) => {
             objchild.title = '第' + `${index + 1}` + '节' + ' ' + i.name;
-            // objchild.key = i.id;
             obj.children.push(objchild);
           });
         }
@@ -190,7 +209,7 @@ export default defineComponent({
           i.state = '还未开始';
         } else if (i.state === 1) {
           i.state = '正在考试...';
-        } else {
+        } else if (i.state === -1) {
           i.state = '考试已结束';
         }
       });

@@ -12,6 +12,17 @@ enum Api {
   GetExamsByTeacher = '/clazz/tea/list',
   GetExamByTeacher = '/user/teacher/exam-list',
   GetStuByTeacher = '/clazz/stu-list',
+
+  GetPapered = '/exam/stuscore',
+}
+
+/**
+ * @description: 获取已经批改的试卷详情
+ */
+export function getPapered(examId, stuId) {
+  return defHttp.get({
+    url: Api.GetPapered + '/' + examId + '/' + stuId,
+  });
 }
 
 /**
