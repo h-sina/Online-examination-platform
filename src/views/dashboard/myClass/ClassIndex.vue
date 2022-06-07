@@ -28,14 +28,9 @@
           </template>
         </a-list-item-meta>
 
-        <a-list
-          style="background-color: #ffffff"
-          size="small"
-          bordered
-          :data-source="item.knowPointList"
-        >
+        <a-list style="background-color: #ffffff" size="small" bordered>
           <div v-show="classListShow">
-            <a-directory-tree :tree-data="treeData" show-icon default-expand-all />
+            <a-directory-tree :tree-data="treeData" default-expand-all />
           </div>
           <template #header>
             <div>课程开始</div>
@@ -76,6 +71,9 @@
           <a-tooltip title="考试请进入我的考试这里暂未联通">
             <a-button v-if="i.state == '正在考试...'">开始考试</a-button>
           </a-tooltip>
+          <a-tooltip title="教师批阅中...">
+            <a-button v-if="i.state == '待批阅'">禁止查看</a-button>
+          </a-tooltip>
         </a-card>
       </a-col>
     </a-row>
@@ -100,127 +98,135 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, watch, computed } from 'vue';
-import { getClassIndex, getStudentList, getExamList } from '/@/api/class/class';
+  import { defineComponent, reactive, toRefs, onMounted, watch, computed } from 'vue';
+  import { getClassIndex, getStudentList, getExamList } from '/@/api/class/class';
 
-import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
-import { useUserStore } from '/@/store/modules/user';
+  import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
+  import { useUserStore } from '/@/store/modules/user';
 
-export default defineComponent({
-  components: {
-    StarOutlined,
-    LikeOutlined,
-    MessageOutlined,
-  },
-  props: {
-    classId: {
-      type: String,
-      required: true,
+  export default defineComponent({
+    components: {
+      StarOutlined,
+      LikeOutlined,
+      MessageOutlined,
     },
-  },
-  emits: ['returnMyClass'],
-  setup(props, actions) {
-    const userStore = useUserStore();
-    const userinfo = computed(() => userStore.getUserInfo);
-
-    watch(
-      () => props.classId,
-      (count, pre) => {
-        getClassIndex1(count);
-        getStudentList1(count);
-        getExamList1(count);
+    props: {
+      classId: {
+        type: String,
+        required: true,
       },
-    );
-    const state = reactive({
-      indexList: [],
-      stuList: [],
-      examList: [],
-      knowPointList: [],
-      treeData: [
-        {
-          title: '所有章节',
-          key: '0-0',
-          slots: {
-            icon: 'smile',
-          },
-          children: [{ title: '小节', key: '0-0-0', slots: { icon: 'meh' } }],
+    },
+    emits: ['returnMyClass'],
+    setup(props, actions) {
+      const userStore = useUserStore();
+      const userinfo = computed(() => userStore.getUserInfo);
+
+      watch(
+        () => props.classId,
+        (count, pre) => {
+          getClassIndex1(count);
+          getStudentList1(count);
+          getExamList1(count);
         },
-      ],
-      classListShow: false,
-    });
-    const returnIndex = () => {
-      actions.emit('returnMyClass');
-    };
-    onMounted(() => {
-      if (props.classId) {
-        getClassIndex1(props.classId);
-        getStudentList1(props.classId);
-        getExamList1(props.classId);
+      );
+      const state = reactive({
+        indexList: [],
+        stuList: [],
+        examList: [],
+        knowPointList: [],
+        treeData: [
+          {
+            title: '所有章节',
+            key: '0-0',
+            slots: {
+              icon: 'smile',
+            },
+            children: [{ title: '小节', key: '0-0-0', slots: { icon: 'meh' } }],
+          },
+        ],
+        classListShow: false,
+      });
+      const returnIndex = () => {
+        actions.emit('returnMyClass');
+      };
+      onMounted(() => {
+        if (props.classId) {
+          getClassIndex1(props.classId);
+          getStudentList1(props.classId);
+          getExamList1(props.classId);
+        }
+      });
+
+      async function getClassIndex1(id) {
+        let res = await getClassIndex(id);
+        console.log(res);
+        state.indexList = res.data;
+        state.knowPointList = state.indexList.knowPointList;
+        classToTree(state.knowPointList);
       }
-    });
 
-    async function getClassIndex1(id) {
-      let res = await getClassIndex(id);
-      console.log(res);
-      state.indexList = res.data;
-      state.knowPointList = state.indexList.knowPointList;
-      classToTree(state.knowPointList);
-    }
+      const classToTree = (arr) => {
+        state.treeData = [];
+        arr.forEach((i, index) => {
+          let obj = {
+            title: 'parent',
+            id: 0,
+            children: [],
+          };
+          let child = { title: 'leaf', id: 0 };
 
-    const classToTree = (arr) => {
-      state.treeData = [];
-      arr.forEach((i, index) => {
-        let obj = {
-          title: 'parent 1',
-          key: '0-0',
-          children: [],
-        };
-        let objchild = { title: 'leaf', key: '0-0-0' };
-        obj.title = '第' + `${index + 1}` + '章' + ' ' + i.name;
-        if (i.knowPoint2) {
-          i.knowPoint2.forEach((i, index) => {
-            objchild.title = '第' + `${index + 1}` + '节' + ' ' + i.name;
-            obj.children.push(objchild);
-          });
-        }
-        state.classListShow = true;
-        state.treeData.push(obj);
-      });
-    };
+          obj.title = '第' + `${index + 1}` + '章' + ' ' + i.name;
+          obj.id = i.id;
 
-    async function getStudentList1(id) {
-      let res = await getStudentList(id);
-      console.log(res);
-      state.stuList = res.data;
-      state.stuList.map((i) => {
-        if (i.userSex == 0) {
-          i.userSex = '女';
-        } else {
-          i.userSex = '男';
-        }
-      });
-    }
-    async function getExamList1(id) {
-      let res = await getExamList(id);
-      console.log(res);
-      state.examList = res.data;
-      state.examList.map((i) => {
-        if (i.state === 0) {
-          i.state = '还未开始';
-        } else if (i.state === 1) {
-          i.state = '正在考试...';
-        } else if (i.state === -1) {
-          i.state = '考试已结束';
-        }
-      });
-    }
+          if (i.knowPoint2) {
+            i.knowPoint2.forEach((i, indexchild) => {
+              let objchild = JSON.parse(JSON.stringify(child));
+              objchild.title = '第' + `${indexchild + 1}` + '节' + ' ' + i.name;
+              objchild.id = i.id;
+              obj.children.push(objchild);
+            });
+          }
+          state.classListShow = true;
+          state.treeData.push(obj);
+        });
+        console.log(state.treeData);
+      };
 
-    return {
-      ...toRefs(state),
-      returnIndex,
-    };
-  },
-});
+      async function getStudentList1(id) {
+        let res = await getStudentList(id);
+        console.log(res);
+        state.stuList = res.data;
+        state.stuList.map((i) => {
+          if (i.userSex == 0) {
+            i.userSex = '女';
+          } else {
+            i.userSex = '男';
+          }
+        });
+      }
+      async function getExamList1(id) {
+        let res = await getExamList(id);
+        console.log(res);
+        state.examList = res.data;
+        state.examList.map((i) => {
+          if (i.state === 0) {
+            i.state = '还未开始';
+          } else if (i.state === 1) {
+            i.state = '正在考试...';
+          } else if (i.state === -1) {
+            i.state = '考试已结束';
+          } else {
+            i.state = '待批阅';
+          }
+        });
+      }
+
+      return {
+        ...toRefs(state),
+        returnIndex,
+      };
+    },
+  });
 </script>
 
 <style lang="scss" scoped></style>

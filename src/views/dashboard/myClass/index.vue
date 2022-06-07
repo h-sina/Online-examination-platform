@@ -41,14 +41,6 @@
         </template>
         <ClassIndex :classId="classId" @returnMyClass="changeVisiable" />
       </a-tab-pane>
-      <a-tab-pane key="3" :disabled="disabledCenter">
-        <template #tab>
-          <span>
-            <apple-outlined />我的考试
-          </span>
-        </template>
-        <ClassIndex :classId="classId" @returnMyClass="changeVisiable" />
-      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
