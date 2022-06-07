@@ -7,11 +7,10 @@
       <template #renderItem="{ item }">
         <ListItem>
           <ListItemMeta>
-            <template #description>{{ item.date }}</template>
+            <template #description>{{ item.createTime }}</template>
             <!-- eslint-disable-next-line -->
             <template #title>
-              {{ item.name }}
-              <span v-html="item.desc"></span>
+              <span v-html="item.content"></span>
             </template>
             <template #avatar>
               <Icon :icon="item.avatar" :size="30" />
@@ -34,6 +33,14 @@ onMounted(() => {
 async function get() {
   let res = await announcement();
   console.log(res);
+  if (res.code === 'ITEST-200') {
+    dynamicInfoItems.splice(0);
+    dynamicInfoItems.push(...res.data);
+  }
+  dynamicInfoItems.forEach((i) => {
+    i.avatar = 'dynamic-avatar-1|svg';
+  });
+  console.log(dynamicInfoItems);
 }
 const ListItem = List.Item;
 const ListItemMeta = List.Item.Meta;

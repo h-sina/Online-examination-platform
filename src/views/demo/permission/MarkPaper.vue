@@ -96,7 +96,7 @@ async function getExam() {
     data.list = res.data;
     console.log(data.list);
   } else {
-    console.log('出错啦');
+    console.log('出错啦请联系后台管理人员');
   }
 }
 

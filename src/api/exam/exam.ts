@@ -54,7 +54,7 @@ export function getExamByPaperIdAndStuId(examId, stuId) {
 /**
  * @description: 提交阅卷
  */
-export function submitExamByPaperIdAndStuId(examId, stuId, params) {
+export function submitExamByPaperIdAndStuId(stuId, examId, params) {
   return defHttp.post({
     url: Api.SubmitExamByPaperIdAndStuId + '/' + stuId + '/' + examId,
     params,

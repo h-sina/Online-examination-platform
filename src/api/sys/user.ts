@@ -60,7 +60,7 @@ export function changePass(mail, newPwd) {
  * @description: 获取公告
  */
 export function announcement() {
-  return defHttp.post({
+  return defHttp.get({
     url: Api.Announcement,
   });
 }

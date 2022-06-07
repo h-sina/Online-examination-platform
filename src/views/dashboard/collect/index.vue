@@ -250,7 +250,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      // getCollections();
+      getCollections();
     });
 
     function createActions(record: EditRecordRow, column: BasicColumn): ActionItem[] {
