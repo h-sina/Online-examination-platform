@@ -6,6 +6,17 @@ enum Api {
   GetStudentList = '/clazz/stu-list',
   GetExamList = '/clazz/my-exam',
   DelStu = '/clazz/remove-stu',
+
+  JoinInClass = '/user/student/add-clazz',
+}
+
+/**
+ * @description: 加入班级
+ */
+export function joinInClass(code) {
+  return defHttp.get({
+    url: Api.JoinInClass + '/' + code,
+  });
 }
 
 /**

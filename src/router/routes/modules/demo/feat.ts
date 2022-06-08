@@ -9,7 +9,7 @@ const feat: AppRouteModule = {
   meta: {
     orderNo: 19,
     icon: 'ion:git-compare-outline',
-    title: '人员面板',
+    title: '管理员面板',
   },
 
   children: [

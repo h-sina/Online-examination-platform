@@ -27,6 +27,17 @@ enum Api {
   SendEnail = '/user/change-pwd/send',
   VerifyEmail = '/user/change-pwd/verify',
   ChangePass = '/user/change-pwd/change',
+
+  GetAllCourse = '/user/s-admin/all-course',
+}
+
+/**
+ * @description: 获取所有课程
+ */
+export function getAllCourse() {
+  return defHttp.get({
+    url: Api.GetAllCourse,
+  });
 }
 
 /**

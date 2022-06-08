@@ -17,11 +17,7 @@
           </a-form-item>
           <a-form-item label="试卷权限">
             <a-radio-group v-model:value="formF.permission">
-              <a-radio :value="--index" name="level" v-for="(i, index) in permissionList">
-                {{
-                i
-                }}
-              </a-radio>
+              <a-radio :value="--index" name="level" v-for="(i, index) in permissionList">{{ i }}</a-radio>
             </a-radio-group>
           </a-form-item>
           <a-button shape="round" @click="submitF">👉下一步</a-button>
@@ -39,11 +35,7 @@
           </a-form-item>
           <a-form-item label="大题类型">
             <a-radio-group v-model:value="formS.type" @change="changeList">
-              <a-radio :value="++index" name="type" v-for="(item, index) in typeList">
-                {{
-                item
-                }}
-              </a-radio>
+              <a-radio :value="++index" name="type" v-for="(item, index) in typeList">{{ item }}</a-radio>
             </a-radio-group>
           </a-form-item>
 
@@ -55,9 +47,11 @@
             >
               <a-checkbox-group v-model:value="quesTempList">
                 <a-checkbox type="checkbox" :value="item.id" v-for="item in list" style="margin: 0">
-                  <a-card
-                    style="width: 300px; margin-top: 5px"
-                  >{{ item.title }}-{{ item.knowledgeName }}-{{ item.level }}-{{ item.analysis }}</a-card>
+                  <a-card style="width: 300px; margin-top: 5px">
+                    {{ item.title }}-{{ item.knowledgeName }}-{{ item.level }}-{{
+                    item.analysis
+                    }}
+                  </a-card>
                 </a-checkbox>
               </a-checkbox-group>
               <img src="../../../../src/assets/images/null.jpg" v-show="list.length === 0" />
@@ -371,7 +365,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .demo-wrap {
   width: 90%;
-  background-color: #eee;
+  background-color: #ffffff;
   border-radius: 10px;
 }
 </style>

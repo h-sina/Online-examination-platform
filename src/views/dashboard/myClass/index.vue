@@ -1,5 +1,11 @@
 <template>
   <div style="padding: 20px">
+    <div style="display: flex; flex-direction: row">
+      <PlusCircleTwoTone :style="{ fontSize: '30px' }" class="mr-2" />
+      <a-input style="width: 200px" v-model:value="code" />
+      <a-button @click="joinClass" type="primary">加入班级</a-button>
+    </div>
+
     <a-tabs v-model:activeKey="activeKey">
       <a-tab-pane key="1">
         <template #tab>
@@ -50,8 +56,12 @@ import Icon from '/@/components/Icon/index';
 import { cardList } from './data';
 import { PageWrapper } from '/@/components/Page';
 import { Card, Row, Col, List } from 'ant-design-vue';
+import { PlusCircleTwoTone } from '@ant-design/icons-vue';
 import { getClassList, getClassIndex, getStudentList, getExamList } from '/@/api/class/class';
 import ClassIndex from './ClassIndex.vue';
+import { joinInClass } from '/@/api/class/class';
+import { useMessage } from '/@/hooks/web/useMessage';
+const { notification } = useMessage();
 
 export default defineComponent({
   components: {
@@ -63,6 +73,7 @@ export default defineComponent({
     [Row.name]: Row,
     [Col.name]: Col,
     ClassIndex,
+    PlusCircleTwoTone,
   },
   setup() {
     const activeKey = ref('1');
@@ -74,6 +85,7 @@ export default defineComponent({
       examList: [],
       classId: '',
       disabledCenter: true,
+      code: '',
     });
     onMounted(() => {
       getClasslist();
@@ -98,12 +110,38 @@ export default defineComponent({
     const changeVisiable = () => {
       data.visible = !data.visible;
     };
+
+    async function joinClass() {
+      if (data.code) {
+        let res = await joinInClass(data.code);
+        console.log(res);
+        if (res.code == 'ITEST-200') {
+          data.code = '';
+          getClasslist();
+          notification.success({
+            message: '成功进入班级',
+            duration: 3,
+          });
+        } else {
+          notification.error({
+            message: res.msg,
+            duration: 3,
+          });
+        }
+      } else {
+        notification.warning({
+          message: '请先填写班级邀请码',
+          duration: 3,
+        });
+      }
+    }
     return {
       ...toRefs(data),
       prefixCls: 'list-card',
       enterClass,
       changeVisiable,
       activeKey,
+      joinClass,
     };
   },
 });
