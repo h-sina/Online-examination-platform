@@ -131,7 +131,7 @@ async function getCourseId () {
     console.log(data.clist);
   }
 }
-function get () {
+get: {
   console.log(111);
   throttle(fn, 1000);
 }

@@ -153,6 +153,9 @@ export const useUserStore = defineStore({
       // get user info
       const userInfo = await this.getUserInfoAction();
 
+      // if (userInfo.code !== 'ITEST-200') {
+      //   return null;
+      // }
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
         this.setSessionTimeout(false);
@@ -183,6 +186,10 @@ export const useUserStore = defineStore({
       const userInfo = await getUserInfo();
       console.log(userInfo);
 
+      // if (userInfo.code !== 'ITEST-200') {
+      //   return null;
+      // }
+      console.log(11);
       // const { roles = [] } = userInfo;
       // if (userInfo.data.userType == 1) {
       //   roles[0] = {

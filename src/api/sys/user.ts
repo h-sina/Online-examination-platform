@@ -107,7 +107,7 @@ export function getNotice() {
  * @description: 删除信息
  */
 export function delNotice(params) {
-  return defHttp.get({
+  return defHttp.delete({
     url: Api.DelNotice + '/' + params,
   });
 }

@@ -14,6 +14,26 @@ enum Api {
   GetStuByTeacher = '/clazz/stu-list',
 
   GetPapered = '/exam/stuscore',
+  GetPapers = '/user/teacher/paper-list',
+  SendPaper = '/exam/create-exam',
+}
+/**
+ * @description: 教师发布考试
+ */
+export function sendPaper(params, classId) {
+  return defHttp.post({
+    url: Api.SendPaper + '/' + classId,
+    params,
+  });
+}
+
+/**
+ * @description: 我的试卷（教师）
+ */
+export function getPapers() {
+  return defHttp.get({
+    url: Api.GetPapers,
+  });
 }
 
 /**

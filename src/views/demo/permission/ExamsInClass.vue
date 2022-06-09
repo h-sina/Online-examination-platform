@@ -1,6 +1,9 @@
 <template>
   <div>
     <a-button shape="round" type="button" class="m-5" @click="ret" v-if="!oneExam">返回</a-button>
+    <a-button type="primary" class="m-5" v-if="!oneExam">
+      <router-link :to="{ name: 'Mypapers', params: { examId: id } }">发布考试</router-link>
+    </a-button>
 
     <a-list
       class="demo-loadmore-list"
@@ -96,6 +99,7 @@ export default defineComponent({
     onMounted(() => {
       getExamsInOneClass(props.id);
       getStusInOneClass(props.id);
+      data.id = props.id;
     });
     const data = reactive({
       list: [],
@@ -106,6 +110,7 @@ export default defineComponent({
       paperId: '',
       visible: false,
       delStuId: '',
+      id: '',
       // loadingMore: true,
     });
     async function getStusInOneClass(id) {

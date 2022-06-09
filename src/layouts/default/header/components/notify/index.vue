@@ -41,7 +41,11 @@ export default defineComponent({
     const classNotice = ref();
     const schoolNotice = ref();
 
-    onMounted(async () => {
+    onMounted(() => {
+      get();
+    });
+
+    async function get() {
       const res = await getNotice();
       res.data.clazzNotice.forEach((item) => {
         item.avatar = 'https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png';
@@ -52,11 +56,7 @@ export default defineComponent({
         { key: '2', name: '学院消息', list: res.data.schoolNotice },
       ];
       console.log(listData);
-      // classNotice.value = listData.clazzNotice;
-      // schoolNotice.value = listData.schoolNotice;
-      // console.log(classNotice);
-      // console.log(schoolNotice);
-    });
+    }
 
     const count = computed(() => {
       let count = 0;
@@ -67,12 +67,10 @@ export default defineComponent({
     });
 
     function onNoticeClick(record: ListItem) {
-      createMessage.success('你点击了通知，ID=' + record.id);
       // 可以直接将其标记为已读（为标题添加删除线）,此处演示的代码会切换删除线状态
       record.titleDelete = !record.titleDelete;
       // 删除通知
-      console.log(record);
-      // delMessage(record.id)
+      delMessage(record.id);
     }
 
     // 删除消息处理
@@ -80,6 +78,8 @@ export default defineComponent({
       console.log(noticeId);
       let res = await delNotice(noticeId);
       console.log(res);
+      createMessage.success('删除信息成功！');
+      get();
     }
 
     // 已阅消息处理

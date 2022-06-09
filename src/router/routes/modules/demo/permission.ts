@@ -45,6 +45,14 @@ const permission: AppRouteModule = {
         title: '组卷管理',
       },
     },
+    {
+      path: 'mypapers',
+      name: 'Mypapers',
+      component: () => import('/@/views/demo/permission/Mypapers.vue'),
+      meta: {
+        title: '我的试卷',
+      },
+    },
     // {
     //   path: 'class',
     //   name: 'Class',
