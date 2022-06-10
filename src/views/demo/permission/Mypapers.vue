@@ -1,5 +1,7 @@
 <template>
   <div>
+    <a-empty v-show="list.length === 0" style="box-sizing: border-box; margin-top: 200px" />
+
     <a-list
       class="demo-loadmore-list"
       :loading="loading"

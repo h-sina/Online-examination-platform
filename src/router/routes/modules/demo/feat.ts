@@ -13,28 +13,28 @@ const feat: AppRouteModule = {
   },
 
   children: [
-    // {
-    //   path: 'student',
-    //   name: 'Student',
-    //   component: () => import('/@/views/demo/feat/Student.vue'),
-    //   meta: {
-    //     title: '学生管理',
-    //   },
-    // },
-    // {
-    //   path: 'teacher',
-    //   name: 'Teacher',
-    //   component: () => import('/@/views/demo/feat/Teacher.vue'),
-    //   meta: {
-    //     title: '教师管理',
-    //   },
-    // },
+    {
+      path: 'addStu',
+      name: 'AddStu',
+      component: () => import('/@/views/demo/feat/AddStu.vue'),
+      meta: {
+        title: '导入学生',
+      },
+    },
     {
       path: 'knowledge',
       name: 'Knowledge',
       component: () => import('/@/views/demo/feat/Knowledge.vue'),
       meta: {
         title: '知识点管理',
+      },
+    },
+    {
+      path: 'view',
+      name: 'View',
+      component: () => import('/@/views/demo/feat/View.vue'),
+      meta: {
+        title: '可视化界面',
       },
     },
     //   {

@@ -4,7 +4,7 @@
       item-layout="horizontal"
       :data-source="data.list"
       class="demo-loadmore-list"
-      :loading="loading"
+      :loading="data.loading"
     >
       <template #renderItem="{ item }">
         <a-list-item>
@@ -49,7 +49,9 @@ async function get () {
 
 <style scoped>
 .demo-loadmore-list {
-  min-height: 350px;
   margin: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 5px;
 }
 </style>

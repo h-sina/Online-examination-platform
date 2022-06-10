@@ -5,6 +5,8 @@ enum Api {
   CreateClass = '/user/s-admin/create-clazz',
   GetTechers = '/user/teacher/list',
   UploadClassPic = '/clazz/upload-clazz-pic',
+
+  // AddStuByExcel = '/user/s-admin/add/student',
 }
 
 /**
