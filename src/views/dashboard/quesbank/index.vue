@@ -24,8 +24,16 @@
     </div>
 
     <CollapseContainer :title="'题目ID：' + `${data.quesDetail.id}`" v-show="!data.detail">
-      <div class="m-15">{{ data.quesDetail.content }}</div>
-      <ul class="m-15" v-for="i in data.quesDetail.selectionList" :key="data.quesDetail.id">
+      <a @click="addErrK">
+        <heart-two-tone class="m-3" />添加到收藏夹
+      </a>
+      <a @click="addCollK">
+        <pushpin-two-tone class="m-3" />添加到错题库
+      </a>
+      <!-- <a-button @click="addErrK" class="m-5">添加到错题库</a-button> -->
+      <!-- <a-button @click="addCollK" class="m-5">添加到收藏夹</a-button> -->
+      <div class="m-5">{{ data.quesDetail.content }}</div>
+      <ul class="ml-5" v-for="i in data.quesDetail.selectionList" :key="data.quesDetail.id">
         <li>{{ i }}</li>
       </ul>
       <BasicForm
@@ -36,11 +44,9 @@
         :schemas="data.schemas"
       />
       <a-button @click="exit" class="m-5">退出训练</a-button>
+      <a-button shape="round" type="primary" @click="lastQues" class="m-5">上一个</a-button>
+      <a-button shape="round" type="primary" @click="nextQues" class="m-5">下一个</a-button>
       <a-button @click="lookAnswer" class="m-5">查看答案</a-button>
-      <a-button @click="lastQues" class="m-5">上一个</a-button>
-      <a-button @click="nextQues" class="m-5">下一个</a-button>
-      <a-button @click="addErrK" class="m-5">添加到错题库</a-button>
-      <a-button @click="addCollK" class="m-5">添加到收藏夹</a-button>
     </CollapseContainer>
     <CollapseContainer title="题目答案" v-show="data.answerIf" :canExpan="false">
       <h1 v-show="data.quesDetail.answer">答案：{{ data.quesDetail.answer }}</h1>
@@ -56,6 +62,7 @@ import Icon from '/@/components/Icon/index';
 import { cardList } from './data';
 import { PageWrapper } from '/@/components/Page';
 import { Card, Row, Col, List } from 'ant-design-vue';
+import { HeartTwoTone, PushpinTwoTone } from '@ant-design/icons-vue';
 import { getQuestion } from '/@/api/question/question';
 import {
   BasicTable,
@@ -97,6 +104,8 @@ export default defineComponent({
     BasicForm,
     TableAction,
     CollapseContainer,
+    HeartTwoTone,
+    PushpinTwoTone,
   },
 
   setup() {
@@ -239,6 +248,7 @@ export default defineComponent({
     // 双向绑定变量
     const data = reactive({
       questionList: [],
+      questionListc: [],
       formData: {},
       obj: {
         orderRule: 0,
@@ -294,6 +304,11 @@ export default defineComponent({
       pagination.value = { total: res.data.total };
 
       data.questionList = res.data.list;
+      data.questionListc = res.data.list.filter((i) => {
+        return i.type !== 4 && i.type !== 5;
+      });
+      console.log(data.questionListc);
+
       console.log(data.questionList);
       data.questionList.map((item) => {
         switch (item.level) {
@@ -396,13 +411,10 @@ export default defineComponent({
       // setFieldsValue(res.data);
     }
 
-    // 根据id获取不同的界面
-    const getContent = () => {};
-
     // 上一题
     const lastQues = () => {
       try {
-        data.questionList.some((item, index, list) => {
+        data.questionListc.some((item, index, list) => {
           if (item.id == data.detailId) {
             if (index - 1 < 0) {
               notification.warning({
@@ -413,7 +425,7 @@ export default defineComponent({
             } else {
               data.detailId = list[index - 1].id;
               closeAnswer();
-              QuestionDetail(data.detailId, typeToId(list[index - 1].type));
+              questionDetail({ id: data.detailId, type: list[index - 1].type });
               throw '循环终止';
             }
           }
@@ -424,7 +436,8 @@ export default defineComponent({
     // 下一题
     const nextQues = () => {
       try {
-        data.questionList.some((item, index, list) => {
+        console.log(data.questionListc);
+        data.questionListc.some((item, index, list) => {
           if (item.id == data.detailId) {
             if (index + 1 >= list.length) {
               notification.warning({
@@ -435,7 +448,7 @@ export default defineComponent({
             } else {
               data.detailId = list[index + 1].id;
               closeAnswer();
-              QuestionDetail(data.detailId, typeToId(list[index + 1].type));
+              questionDetail({ id: data.detailId, type: list[index + 1].type });
               throw '循环终止';
             }
           }
@@ -499,64 +512,6 @@ export default defineComponent({
       }
     }
 
-    // const handleSubmit = () => {
-    //   console.log(getFieldsValue());
-    //   if (data.quesDetail.type === 1) {
-    //     if (data.quesDetail.answer == getFieldsValue().answer1) {
-    //       setFieldsValue({ answer1: null });
-    //       notification.success({
-    //         message: '答案正确 系统将自动跳转到下一题...',
-    //         duration: 3,
-    //       });
-    //       nextQues();
-    //     } else {
-    //       setFieldsValue({ answer1: null });
-    //       notification.success({
-    //         message: '答案错误 即将添加到错题库...',
-    //         duration: 3,
-    //       });
-    //       addErrK();
-    //     }
-    //   } else if (data.quesDetail.type === 2) {
-    //     console.log(data.quesDetail.rightAnswer);
-    //     console.log(getFieldsValue());
-    //     if (data.quesDetail.rightAnswer == getFieldsValue().answer1) {
-    //       setFieldsValue({ answer1: null });
-    //       notification.success({
-    //         message: '答案正确',
-    //         duration: 3,
-    //       });
-    //       nextQues();
-    //     } else {
-    //       setFieldsValue({ answer1: null });
-    //       notification.success({
-    //         message: '答案错误 即将添加到错题库...',
-    //         duration: 3,
-    //       });
-    //       addErrK();
-    //     }
-    //   } else if (data.quesDetail.type === 3) {
-    //     console.log(data.quesDetail.rightAnswer);
-    //     console.log(getFieldsValue().answer1.join(''));
-    //     if (data.quesDetail.rightAnswer == getFieldsValue().answer1.join('')) {
-    //       setFieldsValue({ answer1: null });
-    //       notification.success({
-    //         message: '答案正确',
-    //         duration: 3,
-    //       });
-    //       nextQues();
-    //     } else {
-    //       setFieldsValue({ answer1: null });
-    //       notification.success({
-    //         message: '答案错误 即将添加到错题库...',
-    //         duration: 3,
-    //       });
-    //       addErrK();
-    //     }
-    //   }
-    // };
-
-    // 提交选项
     const handleSubmit = () => {
       console.log(getFieldsValue().answer1);
       if (getFieldsValue().answer1 == undefined) {
@@ -674,7 +629,6 @@ export default defineComponent({
       typeToId,
       addErrK,
       addCollK,
-      getContent,
       handleSubmit,
       createActions,
       lookAnswer,

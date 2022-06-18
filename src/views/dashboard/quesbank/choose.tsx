@@ -27,7 +27,7 @@ export function schemas(): FormSchema[] {
     {
       field: 'selectionList',
       component: 'RadioGroup',
-      label: '单选',
+      label: '',
       colProps: {
         span: 18,
       },
@@ -56,7 +56,7 @@ export function schemas(): FormSchema[] {
     {
       field: 'selectionList',
       component: 'RadioGroup',
-      label: '判断',
+      label: '',
       colProps: {
         span: 18,
       },
@@ -77,7 +77,7 @@ export function schemas(): FormSchema[] {
     {
       field: 'field5',
       component: 'CheckboxGroup',
-      label: '多选',
+      label: '',
       colProps: {
         span: 8,
       },

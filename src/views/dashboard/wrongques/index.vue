@@ -10,7 +10,10 @@
 
     <div v-show="data.detail">
       <CollapseContainer :title="'题目ID：' + `${data.quesDetail.id}`">
-        <div class="m-15" style="font-size: 20px">{{ data.quesDetail.content }}</div>
+        <div class="m-5">{{ data.quesDetail.content }}</div>
+        <ul class="ml-15" v-for="i in data.quesDetail.selectionList" :key="data.quesDetail.id">
+          <li>{{ i }}</li>
+        </ul>
         <BasicForm
           v-show="data.detail"
           @register="register1"
@@ -34,7 +37,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, reactive, computed } from 'vue';
 import Icon from '/@/components/Icon/index';
-import { cardList } from './data';
+// import { cardList } from './data';
 import { PageWrapper } from '/@/components/Page';
 import { Card, Row, Col, List } from 'ant-design-vue';
 // API
@@ -378,7 +381,6 @@ export default defineComponent({
 
     return {
       prefixCls: 'list-card',
-      list: cardList,
       getCollections,
       registerTable,
       data,
