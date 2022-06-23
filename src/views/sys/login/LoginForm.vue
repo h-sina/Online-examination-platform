@@ -25,35 +25,14 @@
       />
     </FormItem>
 
-    <ARow class="enter-x">
-      <ACol :span="12">
-        <FormItem>
-          <!-- No logic, you need to deal with it yourself -->
-          <Checkbox v-model:checked="rememberMe" size="small">
-            {{
-            t('sys.login.rememberMe')
-            }}
-          </Checkbox>
-        </FormItem>
-      </ACol>
-      <ACol :span="12">
-        <FormItem :style="{ 'text-align': 'right' }">
-          <!-- No logic, you need to deal with it yourself -->
-          <Button type="link" size="small" @click="setLoginState(LoginStateEnum.RESET_PASSWORD)">
-            {{
-            t('sys.login.forgetPassword')
-            }}
-          </Button>
-        </FormItem>
-      </ACol>
-    </ARow>
-
     <FormItem class="enter-x">
-      <Button type="primary" size="large" block @click="handleLogin()" :loading="loading">
-        {{
-        t('sys.login.loginButton')
-        }}
-      </Button>
+      <Button
+        type="primary"
+        size="large"
+        block
+        @click="handleLogin()"
+        :loading="loading"
+      >{{ t('sys.login.loginButton') }}</Button>
       <Button
         size="large"
         class="mt-4 enter-x"

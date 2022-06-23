@@ -1,1 +1,0 @@
-const t=(()=>{const o=[];for(let r=0;r<1;r++)o.push({title:"Wrong Wrong",icon:"akar-icons:chat-error",color:"#1890ff",active:"100",new:"1,799",download:"bx:bx-download"});return o})();export{t as cardList};

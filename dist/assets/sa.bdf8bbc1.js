@@ -1,0 +1,1 @@
+import{a2 as e}from"./index.7213dd96.js";function a(){return e.get({url:"/user/s-admin/all-course"})}function u(t){return e.get({url:"/user/teacher/list/"+t})}function l(t,r){return e.uploadFile({url:"https://www.itestwithme.top/clazz/upload-clazz-pic",onUploadProgress:r},t)}function c(t){return e.post({url:"/user/s-admin/create-clazz",params:t})}export{u as a,c,a as g,l as u};
