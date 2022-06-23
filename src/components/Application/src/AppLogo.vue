@@ -4,7 +4,7 @@
 -->
 <template>
   <div class="anticon" :class="getAppLogoClass" @click="goHome">
-    <img src="../../../assets/svg/relogo.svg" />
+    <img style="width: 32px" src="../../../assets/svg/relogo.svg" />
     <div
       class="ml-2 truncate md:opacity-100"
       :class="getTitleClass"
