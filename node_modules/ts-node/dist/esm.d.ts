@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import { Service } from './index';
 export interface NodeLoaderHooksAPI1 {
     resolve: NodeLoaderHooksAPI1.ResolveHook;
@@ -29,6 +30,7 @@ export declare namespace NodeLoaderHooksAPI2 {
     }, defaultResolve: ResolveHook) => Promise<{
         url: string;
         format?: NodeLoaderHooksFormat;
+        shortCircuit?: boolean;
     }>;
     type LoadHook = (url: string, context: {
         format: NodeLoaderHooksFormat | null | undefined;
@@ -36,6 +38,7 @@ export declare namespace NodeLoaderHooksAPI2 {
     }, defaultLoad: NodeLoaderHooksAPI2['load']) => Promise<{
         format: NodeLoaderHooksFormat;
         source: string | Buffer | undefined;
+        shortCircuit?: boolean;
     }>;
     type NodeImportConditions = unknown;
     interface NodeImportAssertions {

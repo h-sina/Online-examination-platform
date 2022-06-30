@@ -18,7 +18,7 @@ export interface TSCommon {
     getPreEmitDiagnostics: typeof _ts.getPreEmitDiagnostics;
     flattenDiagnosticMessageText: typeof _ts.flattenDiagnosticMessageText;
     transpileModule: typeof _ts.transpileModule;
-    ModuleKind: typeof _ts.ModuleKind;
+    ModuleKind: TSCommon.ModuleKindEnum;
     ScriptTarget: typeof _ts.ScriptTarget;
     findConfigFile: typeof _ts.findConfigFile;
     readConfigFile: typeof _ts.readConfigFile;
@@ -30,7 +30,7 @@ export interface TSCommon {
     createModuleResolutionCache: typeof _ts.createModuleResolutionCache;
     resolveModuleName: typeof _ts.resolveModuleName;
     resolveModuleNameFromCache: typeof _ts.resolveModuleNameFromCache;
-    resolveTypeReferenceDirective(typeReferenceDirectiveName: string, containingFile: string | undefined, options: _ts.CompilerOptions, host: _ts.ModuleResolutionHost, redirectedReference?: _ts.ResolvedProjectReference, cache?: _ts.TypeReferenceDirectiveResolutionCache, resolutionMode?: _ts.SourceFile['impliedNodeFormat']): _ts.ResolvedTypeReferenceDirectiveWithFailedLookupLocations;
+    resolveTypeReferenceDirective: typeof _ts.resolveTypeReferenceDirective;
     createIncrementalCompilerHost: typeof _ts.createIncrementalCompilerHost;
     createSourceFile: typeof _ts.createSourceFile;
     getDefaultLibFileName: typeof _ts.getDefaultLibFileName;
@@ -41,7 +41,6 @@ export interface TSCommon {
 }
 export declare namespace TSCommon {
     interface LanguageServiceHost extends _ts.LanguageServiceHost {
-        resolveTypeReferenceDirectives?(typeDirectiveNames: string[] | _ts.FileReference[], containingFile: string, redirectedReference: _ts.ResolvedProjectReference | undefined, options: _ts.CompilerOptions, containingFileMode?: _ts.SourceFile['impliedNodeFormat'] | undefined): (_ts.ResolvedTypeReferenceDirective | undefined)[];
     }
     type ModuleResolutionHost = _ts.ModuleResolutionHost;
     type ParsedCommandLine = _ts.ParsedCommandLine;
@@ -52,4 +51,13 @@ export declare namespace TSCommon {
     type ResolvedModuleWithFailedLookupLocations = _ts.ResolvedModuleWithFailedLookupLocations;
     type FileReference = _ts.FileReference;
     type SourceFile = _ts.SourceFile;
+    type ModuleKindEnum = typeof _ts.ModuleKind & {
+        Node16: typeof _ts.ModuleKind extends {
+            Node16: any;
+        } ? typeof _ts.ModuleKind['Node16'] : 100;
+    };
+    namespace ModuleKind {
+        type CommonJS = _ts.ModuleKind.CommonJS;
+        type ESNext = _ts.ModuleKind.ESNext;
+    }
 }

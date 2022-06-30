@@ -9,7 +9,7 @@ let arg;
 const util_2 = require("./util");
 const repl_1 = require("./repl");
 const index_1 = require("./index");
-const node_cjs_helpers_1 = require("../dist-raw/node-cjs-helpers");
+const node_internal_modules_cjs_helpers_1 = require("../dist-raw/node-internal-modules-cjs-helpers");
 const spawn_child_1 = require("./child/spawn-child");
 const configuration_1 = require("./configuration");
 /**
@@ -96,6 +96,7 @@ function parseArgv(argv, entrypointArgs) {
             '--scope': Boolean,
             '--scopeDir': String,
             '--noExperimentalReplAwait': Boolean,
+            '--experimentalSpecifierResolution': String,
             // Aliases.
             '-e': '--eval',
             '-i': '--interactive',
@@ -127,6 +128,7 @@ function parseArgv(argv, entrypointArgs) {
             '--log-error': '--logError',
             '--scope-dir': '--scopeDir',
             '--no-experimental-repl-await': '--noExperimentalReplAwait',
+            '--experimental-specifier-resolution': '--experimentalSpecifierResolution',
         }, {
             argv,
             stopAtPositional: true,
@@ -135,7 +137,7 @@ function parseArgv(argv, entrypointArgs) {
     // Only setting defaults for CLI-specific flags
     // Anything passed to `register()` can be `undefined`; `create()` will apply
     // defaults.
-    const { '--cwd': cwdArg, '--help': help = false, '--scriptMode': scriptMode, '--cwdMode': cwdMode, '--version': version = 0, '--showConfig': showConfig, '--require': argsRequire = [], '--eval': code = undefined, '--print': print = false, '--interactive': interactive = false, '--files': files, '--compiler': compiler, '--compilerOptions': compilerOptions, '--project': project, '--ignoreDiagnostics': ignoreDiagnostics, '--ignore': ignore, '--transpileOnly': transpileOnly, '--typeCheck': typeCheck, '--transpiler': transpiler, '--swc': swc, '--compilerHost': compilerHost, '--pretty': pretty, '--skipProject': skipProject, '--skipIgnore': skipIgnore, '--preferTsExts': preferTsExts, '--logError': logError, '--emit': emit, '--scope': scope = undefined, '--scopeDir': scopeDir = undefined, '--noExperimentalReplAwait': noExperimentalReplAwait, '--esm': esm, _: restArgs, } = args;
+    const { '--cwd': cwdArg, '--help': help = false, '--scriptMode': scriptMode, '--cwdMode': cwdMode, '--version': version = 0, '--showConfig': showConfig, '--require': argsRequire = [], '--eval': code = undefined, '--print': print = false, '--interactive': interactive = false, '--files': files, '--compiler': compiler, '--compilerOptions': compilerOptions, '--project': project, '--ignoreDiagnostics': ignoreDiagnostics, '--ignore': ignore, '--transpileOnly': transpileOnly, '--typeCheck': typeCheck, '--transpiler': transpiler, '--swc': swc, '--compilerHost': compilerHost, '--pretty': pretty, '--skipProject': skipProject, '--skipIgnore': skipIgnore, '--preferTsExts': preferTsExts, '--logError': logError, '--emit': emit, '--scope': scope = undefined, '--scopeDir': scopeDir = undefined, '--noExperimentalReplAwait': noExperimentalReplAwait, '--experimentalSpecifierResolution': experimentalSpecifierResolution, '--esm': esm, _: restArgs, } = args;
     return {
         // Note: argv and restArgs may be overwritten by child process
         argv: process.argv,
@@ -170,6 +172,7 @@ function parseArgv(argv, entrypointArgs) {
         scope,
         scopeDir,
         noExperimentalReplAwait,
+        experimentalSpecifierResolution,
         esm,
     };
 }
@@ -214,6 +217,8 @@ Options:
   --preferTsExts                  Prefer importing TypeScript files over JavaScript files
   --logError                      Logs TypeScript errors to stderr instead of throwing exceptions
   --noExperimentalReplAwait       Disable top-level await in REPL.  Equivalent to node's --no-experimental-repl-await
+  --experimentalSpecifierResolution [node|explicit]
+                                  Equivalent to node's --experimental-specifier-resolution
 `);
         process.exit(0);
     }
@@ -245,7 +250,7 @@ Options:
     };
 }
 function phase3(payload) {
-    const { emit, files, pretty, transpileOnly, transpiler, noExperimentalReplAwait, typeCheck, swc, compilerHost, ignore, preferTsExts, logError, scriptMode, cwdMode, project, skipProject, skipIgnore, compiler, ignoreDiagnostics, compilerOptions, argsRequire, scope, scopeDir, } = payload.parseArgvResult;
+    const { emit, files, pretty, transpileOnly, transpiler, noExperimentalReplAwait, typeCheck, swc, compilerHost, ignore, preferTsExts, logError, scriptMode, cwdMode, project, skipProject, skipIgnore, compiler, ignoreDiagnostics, compilerOptions, argsRequire, scope, scopeDir, esm, experimentalSpecifierResolution, } = payload.parseArgvResult;
     const { cwd, scriptPath } = payload.phase2Result;
     const preloadedConfig = (0, configuration_1.findAndReadConfig)({
         cwd,
@@ -271,6 +276,8 @@ function phase3(payload) {
         scope,
         scopeDir,
         preferTsExts,
+        esm,
+        experimentalSpecifierResolution: experimentalSpecifierResolution,
     });
     if (preloadedConfig.options.esm)
         payload.shouldUseChildProcess = true;
@@ -410,7 +417,7 @@ function phase4(payload) {
         // Note: eval and repl may both run, but never with stdin.
         // If stdin runs, eval and repl will not.
         if (executeEval) {
-            (0, node_cjs_helpers_1.addBuiltinLibsToObject)(global);
+            (0, node_internal_modules_cjs_helpers_1.addBuiltinLibsToObject)(global);
             evalAndExitOnTsError(evalStuff.repl, evalStuff.module, code, print, 'eval');
         }
         if (executeRepl) {
@@ -480,7 +487,7 @@ function requireResolveNonCached(absoluteModuleSpecifier) {
     // On these old versions, pollute the require cache instead. This is a deliberate
     // ts-node limitation that will *rarely* manifest, and will not matter once node 12
     // is end-of-life'd on 2022-04-30
-    const isSupportedNodeVersion = (0, index_1.versionGteLt)(process.versions.node, '12.2.0');
+    const isSupportedNodeVersion = (0, util_2.versionGteLt)(process.versions.node, '12.2.0');
     if (!isSupportedNodeVersion)
         return require.resolve(absoluteModuleSpecifier);
     const { dir, base } = (0, path_1.parse)(absoluteModuleSpecifier);

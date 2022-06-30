@@ -13,9 +13,9 @@ const footerLeadingBlank = (parsed, when = 'always') => {
     }
     const negated = when === 'never';
     const rawLines = (0, to_lines_1.default)(parsed.raw);
-    const bodyLines = parsed.body ? (0, to_lines_1.default)(parsed.body) : [];
-    const bodyOffset = bodyLines.length > 0 ? rawLines.indexOf(bodyLines[0]) : 1;
-    const [leading] = rawLines.slice(bodyLines.length + bodyOffset);
+    const footerLines = (0, to_lines_1.default)(parsed.footer);
+    const footerOffset = rawLines.indexOf(footerLines[0]);
+    const [leading] = rawLines.slice(footerOffset - 1);
     // Check if the first line of footer is empty
     const succeeds = leading === '';
     return [

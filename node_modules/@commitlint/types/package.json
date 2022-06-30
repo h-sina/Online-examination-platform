@@ -1,6 +1,6 @@
 {
   "name": "@commitlint/types",
-  "version": "16.2.1",
+  "version": "17.0.0",
   "description": "Shared types for commitlint packages",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,7 +11,7 @@
     "pkg": "pkg-check"
   },
   "engines": {
-    "node": ">=v12"
+    "node": ">=v14"
   },
   "repository": {
     "type": "git",
@@ -28,10 +28,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^4.0.0"
+    "chalk": "^4.1.0"
   },
   "devDependencies": {
-    "@commitlint/utils": "^16.2.1"
+    "@commitlint/utils": "^17.0.0"
   },
-  "gitHead": "071cce297f207ebcaf9cfa00e23542b7e0a550e8"
+  "gitHead": "ed437d29464ab1b239deecb84ce4d1f2a5e471c6"
 }

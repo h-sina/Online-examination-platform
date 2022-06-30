@@ -26,6 +26,8 @@ declare global {
 export declare const VERSION: any;
 /**
  * Options for creating a new TypeScript compiler instance.
+
+ * @category Basic
  */
 export interface CreateOptions {
     /**
@@ -180,8 +182,9 @@ export interface CreateOptions {
     experimentalReplAwait?: boolean;
     /**
      * Override certain paths to be compiled and executed as CommonJS or ECMAScript modules.
-     * When overridden, the tsconfig "module" and package.json "type" fields are overridden.
-     * This is useful because TypeScript files cannot use the .cjs nor .mjs file extensions;
+     * When overridden, the tsconfig "module" and package.json "type" fields are overridden, and
+     * the file extension is ignored.
+     * This is useful if you cannot use .mts, .cts, .mjs, or .cjs file extensions;
      * it achieves the same effect.
      *
      * Each key is a glob pattern following the same rules as tsconfig's "include" array.
@@ -200,7 +203,9 @@ export interface CreateOptions {
      */
     tsTrace?: (str: string) => void;
     /**
-     * TODO DOCS YAY
+     * Enable native ESM support.
+     *
+     * For details, see https://typestrong.org/ts-node/docs/imports#native-ecmascript-modules
      */
     esm?: boolean;
     /**
@@ -211,10 +216,19 @@ export interface CreateOptions {
      * @default false
      */
     preferTsExts?: boolean;
+    /**
+     * Like node's `--experimental-specifier-resolution`, , but can also be set in your `tsconfig.json` for convenience.
+     *
+     * For details, see https://nodejs.org/dist/latest-v18.x/docs/api/esm.html#customizing-esm-specifier-resolution-algorithm
+     */
+    experimentalSpecifierResolution?: 'node' | 'explicit';
 }
-export declare type ModuleTypes = Record<string, 'cjs' | 'esm' | 'package'>;
+export declare type ModuleTypes = Record<string, ModuleTypeOverride>;
+export declare type ModuleTypeOverride = 'cjs' | 'esm' | 'package';
 /**
  * Options for registering a TypeScript compiler instance globally.
+
+ * @category Basic
  */
 export interface RegisterOptions extends CreateOptions {
     /**
@@ -224,8 +238,9 @@ export interface RegisterOptions extends CreateOptions {
      *
      * For details, see https://github.com/TypeStrong/ts-node/issues/1514
      */
-    experimentalResolverFeatures?: boolean;
+    experimentalResolver?: boolean;
 }
+export declare type ExperimentalSpecifierResolution = 'node' | 'explicit';
 /**
  * Must be an interface to support `typescript-json-schema`.
  */
@@ -245,7 +260,8 @@ export declare class TSError extends BaseError {
     diagnosticCodes: number[];
     name: string;
     diagnosticText: string;
-    constructor(diagnosticText: string, diagnosticCodes: number[]);
+    diagnostics: ReadonlyArray<_ts.Diagnostic>;
+    constructor(diagnosticText: string, diagnosticCodes: number[], diagnostics?: ReadonlyArray<_ts.Diagnostic>);
 }
 /**
  * Primary ts-node service, which wraps the TypeScript API and can compile TypeScript to JavaScript
@@ -267,14 +283,20 @@ export interface Service {
 export declare type Register = Service;
 /**
  * Create a new TypeScript compiler instance and register it onto node.js
+ *
+ * @category Basic
  */
 export declare function register(opts?: RegisterOptions): Service;
 /**
  * Register TypeScript compiler instance onto node.js
+
+ * @category Basic
  */
 export declare function register(service: Service): Service;
 /**
  * Create TypeScript compiler instance.
+ *
+ * @category Basic
  */
 export declare function create(rawOptions?: CreateOptions): Service;
 /**
@@ -286,5 +308,14 @@ export declare function create(rawOptions?: CreateOptions): Service;
  *
  * Node changed the hooks API, so there are two possible APIs.  This function
  * detects your node version and returns the appropriate API.
+ *
+ * @category ESM Loader
  */
 export declare const createEsmHooks: typeof createEsmHooksFn;
+/**
+ * When using `module: nodenext` or `module: node12`, there are two possible styles of emit depending in file extension or package.json "type":
+ *
+ * - CommonJS with dynamic imports preserved (not transformed into `require()` calls)
+ * - ECMAScript modules with `import foo = require()` transformed into `require = createRequire(); const foo = require()`
+ */
+export declare type NodeModuleEmitKind = 'nodeesm' | 'nodecjs';

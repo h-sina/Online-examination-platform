@@ -363,6 +363,7 @@ function install(opts) {
     const uninstall = () => {
       if(uninstalled) return;
       uninstalled = true;
+      process.removeListener('exit', uninstall);
       if (blobStore.isDirty()) {
         blobStore.save();
       }

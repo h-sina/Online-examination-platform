@@ -10,7 +10,7 @@ else {
     originalOnWarning = _process._events.warning;
     _process._events.warning = onWarning;
 }
-const messageMatch = /--(?:experimental-)?loader\b/;
+const messageMatch = /(?:--(?:experimental-)?loader\b|\bCustom ESM Loaders\b)/;
 function onWarning(warning, ...rest) {
     // Suppress warning about how `--loader` is experimental
     if ((warning === null || warning === void 0 ? void 0 : warning.name) === 'ExperimentalWarning' &&

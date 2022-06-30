@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loadCompiler = exports.resolveAndLoadCompiler = exports.readConfig = exports.findAndReadConfig = void 0;
+exports.getTsConfigDefaults = exports.ComputeAsCommonRootOfFiles = exports.loadCompiler = exports.resolveAndLoadCompiler = exports.readConfig = exports.findAndReadConfig = void 0;
 const path_1 = require("path");
 const index_1 = require("./index");
 const ts_internals_1 = require("./ts-internals");
@@ -173,10 +173,6 @@ function readConfig(cwd, ts, rawApiOptions) {
     }
     // Remove resolution of "files".
     const files = (_c = (_b = rawApiOptions.files) !== null && _b !== void 0 ? _b : tsNodeOptionsFromTsconfig.files) !== null && _c !== void 0 ? _c : index_1.DEFAULTS.files;
-    if (!files) {
-        config.files = [];
-        config.include = [];
-    }
     // Only if a config file is *not* loaded, load an implicit configuration from @tsconfig/bases
     const skipDefaultCompilerOptions = configFilePath != null;
     const defaultCompilerOptionsForNodeVersion = skipDefaultCompilerOptions
@@ -202,7 +198,9 @@ function readConfig(cwd, ts, rawApiOptions) {
     const fixedConfig = fixConfig(ts, ts.parseJsonConfigFileContent(config, {
         fileExists,
         readFile,
-        readDirectory: ts.sys.readDirectory,
+        // Only used for globbing "files", "include", "exclude"
+        // When `files` option disabled, we want to avoid the fs calls
+        readDirectory: files ? ts.sys.readDirectory : () => [],
         useCaseSensitiveFileNames: ts.sys.useCaseSensitiveFileNames,
     }, basePath, undefined, configFilePath));
     return {
@@ -241,7 +239,7 @@ exports.loadCompiler = loadCompiler;
 function filterRecognizedTsConfigTsNodeOptions(jsonObject) {
     if (jsonObject == null)
         return { recognized: {}, unrecognized: {} };
-    const { compiler, compilerHost, compilerOptions, emit, files, ignore, ignoreDiagnostics, logError, preferTsExts, pretty, require, skipIgnore, transpileOnly, typeCheck, transpiler, scope, scopeDir, moduleTypes, experimentalReplAwait, swc, experimentalResolverFeatures, esm, ...unrecognized } = jsonObject;
+    const { compiler, compilerHost, compilerOptions, emit, files, ignore, ignoreDiagnostics, logError, preferTsExts, pretty, require, skipIgnore, transpileOnly, typeCheck, transpiler, scope, scopeDir, moduleTypes, experimentalReplAwait, swc, experimentalResolver, esm, experimentalSpecifierResolution, ...unrecognized } = jsonObject;
     const filteredTsConfigOptions = {
         compiler,
         compilerHost,
@@ -263,12 +261,42 @@ function filterRecognizedTsConfigTsNodeOptions(jsonObject) {
         scopeDir,
         moduleTypes,
         swc,
-        experimentalResolverFeatures,
+        experimentalResolver,
         esm,
+        experimentalSpecifierResolution,
     };
     // Use the typechecker to make sure this implementation has the correct set of properties
     const catchExtraneousProps = null;
     const catchMissingProps = null;
     return { recognized: filteredTsConfigOptions, unrecognized };
 }
+/** @internal */
+exports.ComputeAsCommonRootOfFiles = Symbol();
+/**
+ * Some TS compiler options have defaults which are not provided by TS's config parsing functions.
+ * This function centralizes the logic for computing those defaults.
+ * @internal
+ */
+function getTsConfigDefaults(config, basePath, _files, _include, _exclude) {
+    const { composite = false } = config.options;
+    let rootDir = config.options.rootDir;
+    if (rootDir == null) {
+        if (composite)
+            rootDir = basePath;
+        // Return this symbol to avoid computing from `files`, which would require fs calls
+        else
+            rootDir = exports.ComputeAsCommonRootOfFiles;
+    }
+    const { outDir = rootDir } = config.options;
+    // Docs are wrong: https://www.typescriptlang.org/tsconfig#include
+    // Docs say **, but it's actually **/*; compiler throws error for **
+    const include = _files ? [] : ['**/*'];
+    const files = _files !== null && _files !== void 0 ? _files : [];
+    // Docs are misleading: https://www.typescriptlang.org/tsconfig#exclude
+    // Docs say it excludes node_modules, bower_components, jspm_packages, but actually those are excluded via behavior of "include"
+    const exclude = _exclude !== null && _exclude !== void 0 ? _exclude : [outDir]; // TODO technically, outDir is absolute path, but exclude should be relative glob pattern?
+    // TODO compute baseUrl
+    return { rootDir, outDir, include, files, exclude, composite };
+}
+exports.getTsConfigDefaults = getTsConfigDefaults;
 //# sourceMappingURL=configuration.js.map

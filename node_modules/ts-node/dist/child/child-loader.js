@@ -1,7 +1,4 @@
 "use strict";
-// TODO same version check as ESM loader, but export stubs
-// Also export a binder function that allows re-binding where the stubs
-// delegate.
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.transformSource = exports.getFormat = exports.load = exports.resolve = exports.lateBindHooks = void 0;

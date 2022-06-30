@@ -1,7 +1,7 @@
 "use strict";
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBasePathForProjectLocalDependencyResolution = exports.createProjectLocalResolveHelper = exports.attemptRequireWithV8CompileCache = exports.cachedLookup = exports.hasOwnProperty = exports.normalizeSlashes = exports.parse = exports.split = exports.assign = exports.yn = exports.createRequire = void 0;
+exports.versionGteLt = exports.once = exports.getBasePathForProjectLocalDependencyResolution = exports.createProjectLocalResolveHelper = exports.attemptRequireWithV8CompileCache = exports.cachedLookup = exports.hasOwnProperty = exports.normalizeSlashes = exports.parse = exports.split = exports.assign = exports.yn = exports.createRequire = void 0;
 const module_1 = require("module");
 const ynModule = require("yn");
 const path_1 = require("path");
@@ -137,4 +137,39 @@ function getBasePathForProjectLocalDependencyResolution(configFilePath, projectS
     // should have configFilePath, so not reach this codepath.
 }
 exports.getBasePathForProjectLocalDependencyResolution = getBasePathForProjectLocalDependencyResolution;
+/** @internal */
+function once(fn) {
+    let value;
+    let ran = false;
+    function onceFn(...args) {
+        if (ran)
+            return value;
+        value = fn(...args);
+        ran = true;
+        return value;
+    }
+    return onceFn;
+}
+exports.once = once;
+/** @internal */
+function versionGteLt(version, gteRequirement, ltRequirement) {
+    const [major, minor, patch, extra] = parse(version);
+    const [gteMajor, gteMinor, gtePatch] = parse(gteRequirement);
+    const isGte = major > gteMajor ||
+        (major === gteMajor &&
+            (minor > gteMinor || (minor === gteMinor && patch >= gtePatch)));
+    let isLt = true;
+    if (ltRequirement) {
+        const [ltMajor, ltMinor, ltPatch] = parse(ltRequirement);
+        isLt =
+            major < ltMajor ||
+                (major === ltMajor &&
+                    (minor < ltMinor || (minor === ltMinor && patch < ltPatch)));
+    }
+    return isGte && isLt;
+    function parse(requirement) {
+        return requirement.split(/[\.-]/).map((s) => parseInt(s, 10));
+    }
+}
+exports.versionGteLt = versionGteLt;
 //# sourceMappingURL=util.js.map

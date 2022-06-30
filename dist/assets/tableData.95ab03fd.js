@@ -1,1 +1,0 @@
-function t(){return[{title:"ID",dataIndex:"id",fixed:"left",width:180},{title:"title",dataIndex:"title",width:150},{title:"type",dataIndex:"type"},{title:"level",dataIndex:"level"},{title:"creatorName",width:150,dataIndex:"creatorName"},{title:"lastUpdateTime",width:150,dataIndex:"lastUpdateTime",sorter:!0}]}export{t as getBasicColumns};

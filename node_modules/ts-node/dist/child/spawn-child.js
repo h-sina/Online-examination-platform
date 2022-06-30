@@ -4,11 +4,11 @@ exports.callInChild = void 0;
 const child_process_1 = require("child_process");
 const zlib_1 = require("zlib");
 const url_1 = require("url");
-const __1 = require("..");
+const util_1 = require("../util");
 const argPrefix = '--brotli-base64-config=';
 /** @internal */
 function callInChild(state) {
-    if (!(0, __1.versionGteLt)(process.versions.node, '12.17.0')) {
+    if (!(0, util_1.versionGteLt)(process.versions.node, '12.17.0')) {
         throw new Error('`ts-node-esm` and `ts-node --esm` require node version 12.17.0 or newer.');
     }
     const child = (0, child_process_1.spawn)(process.execPath, [

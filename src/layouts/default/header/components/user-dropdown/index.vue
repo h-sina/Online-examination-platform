@@ -16,12 +16,12 @@
           v-if="getShowDoc"
         />
         <MenuDivider v-if="getShowDoc" />-->
-        <MenuItem
+        <!-- <MenuItem
           v-if="getUseLockPage"
           key="lock"
           :text="t('layout.header.tooltipLock')"
           icon="ion:lock-closed-outline"
-        />
+        />-->
         <MenuItem
           key="logout"
           :text="t('layout.header.dropdownItemLoginOut')"
