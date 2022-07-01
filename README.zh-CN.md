@@ -70,6 +70,8 @@ Use github actions for CI/CD automatic build deployment and release
 ![](https://img-blog.csdnimg.cn/2154ec835ad04a9590c9ccc4a17dcb0c.gif)
 ### Student Exam
 ![](https://img-blog.csdnimg.cn/fbf87d75d8844a729b48567150f217aa.gif)
+### chat room
+![](https://img-blog.csdnimg.cn/561452781d104c11b112608983e03254.gif)
 <!--
 <table>
     <tr>
