@@ -25,7 +25,7 @@ const emit = defineEmits(['close']);
 const persons = ref(0);
 
 /** 服务器URL */
-const url = 'ws://81.69.234.69/';
+const url = 'http://81.69.234.69/';
 /** 本地URL */
 // const url = 'http://127.0.0.1:3001';
 
