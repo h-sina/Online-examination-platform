@@ -33,7 +33,8 @@
 
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
-      <!-- <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" /> -->
+      <CommentOutlined title="及时通讯" @click="ws = true" />
+      <Index v-if="ws" @close="ws = false" />
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
 
@@ -55,7 +56,9 @@
   </Header>
 </template>
 <script lang="ts">
-import { defineComponent, unref, computed } from 'vue';
+import { CommentOutlined } from '@ant-design/icons-vue';
+import Index from '/@/views/socket-io/index.vue';
+import { defineComponent, unref, computed, ref } from 'vue';
 
 import { propTypes } from '/@/utils/propTypes';
 
@@ -84,6 +87,7 @@ import { useLocale } from '/@/locales/useLocale';
 export default defineComponent({
   name: 'LayoutHeader',
   components: {
+    CommentOutlined,
     Header: Layout.Header,
     AppLogo,
     LayoutTrigger,
@@ -98,11 +102,13 @@ export default defineComponent({
     SettingDrawer: createAsyncComponent(() => import('/@/layouts/default/setting/index.vue'), {
       loading: true,
     }),
+    Index,
   },
   props: {
     fixed: propTypes.bool,
   },
   setup(props) {
+    const ws = ref(false);
     const { prefixCls } = useDesign('layout-header');
     const {
       getShowTopMenu,
@@ -191,6 +197,7 @@ export default defineComponent({
       getShowSettingButton,
       getShowSetting,
       getShowSearch,
+      ws,
     };
   },
 });

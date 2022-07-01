@@ -31,7 +31,7 @@
             <a-list-item>
               <template #actions>
                 <a @click="del(item.id)">移除</a>
-                <a>联系ta</a>
+                <a @click="send">联系ta</a>
               </template>
               <a-list-item-meta :description="item.userSex">
                 <template #title>
@@ -71,10 +71,12 @@
       </a-row>
     </a-list>
     <ExamInclass :id="examId" :paperId="paperId" v-if="oneExam" @exit="exit" />
+    <!-- <Index v-if="wswindow" /> -->
   </div>
 </template>
 
 <script lang="ts">
+// import Index from './socket-io/index.vue';
 import { defineComponent, onMounted, toRefs, reactive } from 'vue';
 import { getExamByTeacher, GetStuByTeacher } from '/@/api/exam/exam';
 import { delStu } from '/@/api/class/class';
@@ -87,6 +89,7 @@ export default defineComponent({
   components: {
     ExamInclass,
     CollapseContainer,
+    // Index,
   },
   props: {
     id: {
@@ -111,6 +114,7 @@ export default defineComponent({
       visible: false,
       delStuId: '',
       id: '',
+      wswindow: false,
       // loadingMore: true,
     });
     async function getStusInOneClass(id) {
@@ -187,6 +191,9 @@ export default defineComponent({
         });
       }
     }
+    const send = () => {
+      data.wswindow = true;
+    };
     return {
       ...toRefs(data),
       enterExam,
@@ -194,6 +201,7 @@ export default defineComponent({
       ret,
       del,
       handleOk,
+      send,
     };
   },
 });
