@@ -25,13 +25,13 @@ const emit = defineEmits(['close']);
 const persons = ref(0);
 
 /** 服务器URL */
-const url = 'http://81.69.234.69:8000';
+// const url = 'http://81.69.234.69:8000';
 /** 本地URL */
-// const url = 'http://127.0.0.1:3001';
+const url = 'http://127.0.0.1:3001';
 
 /** 连接 */
 const socket = io(url, {
-  // transports: ['websocket'],
+  transports: ['websocket'],
   reconnection: true,
   reconnectionAttempts: Infinity,
   auth: {
